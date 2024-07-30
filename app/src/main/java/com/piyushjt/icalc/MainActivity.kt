@@ -26,9 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.substring
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.piyushjt.icalc.ui.theme.*
@@ -71,7 +76,7 @@ fun VerticalScreen(
     ) {
 
         // Value text view
-        TextValue(text = state.value.toString())
+        TextValue(text = state.valueToShow)
 
         // Buttons in grid layout
         VerticalButtons(event = event, state = state)
@@ -91,7 +96,24 @@ fun TextValue(
             .padding(horizontal = 20.dp, vertical = 20.dp), contentAlignment = Alignment.BottomEnd
     ) {
         Text(
-            text = text,
+            text = buildAnnotatedString {
+                if (text.contains('e')) {
+
+                    append(text.substring(0, text.indexOf('e') + 1).replace("e", "x10"))
+
+                    withStyle(
+                        style = SpanStyle(
+                            fontSize = 24.sp,
+                            baselineShift = BaselineShift.Superscript
+                        )
+                    ) {
+                        append(text.substringAfter('e'))
+                    }
+                }
+                else {
+                    append(text)
+                }
+            },
             color = TextColor,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontSize = 52.sp
@@ -121,7 +143,7 @@ fun VerticalButtons(
         ){
 
             // Showing text in buttons as needed
-            OtherButton(event = event, text = if (state.value != 0) "C" else "AC")
+            OtherButton(event = event, text = if (state.value != "0") "C" else "AC")
 
             OtherButton(event = event, text = "+/-")
             OtherButton(event = event, text = "%")
@@ -227,7 +249,7 @@ fun NumButton(
             // If equal button was pressed just before clicking on a number
             if(state.isEqualPressed){
                 event(Event.ClearAll) // Clear everything
-                event(Event.SetValue(text.toInt())) // Set the new number
+                event(Event.SetValue(text)) // Set the new number
             }
 
             // If equal button was not pressed
@@ -237,8 +259,8 @@ fun NumButton(
                 if(state.buttonClicked == null){
 
                     // if value was 0 i.e., empty
-                    if(state.value == 0){
-                        event(Event.SetValue(text.toInt())) // change value directly
+                    if(state.value == "0"){
+                        event(Event.SetValue(text)) // change value directly
                     }
 
                     // if value was not 0
@@ -259,7 +281,7 @@ fun NumButton(
                     // If a value is not been added
                     else {
                         event(Event.SetPreviousValue(state.value)) // Update the previous value
-                        event(Event.SetValue(text.toInt())) // Set the new number
+                        event(Event.SetValue(text)) // Set the new number
                         event(Event.SetButtonClickedForColor(null)) // Change the button to null
 
                         event(Event.SetValueSetAfterOperator(true))
@@ -299,7 +321,7 @@ fun ZeroButton(
         onClick = {
             // If equal button was pressed just before clicking on a number
             if(state.isEqualPressed){
-                event(Event.SetValue(0)) // changing value
+                event(Event.SetValue("0")) // changing value
             }
 
             // If equal button was not pressed
@@ -309,8 +331,8 @@ fun ZeroButton(
                 if(state.buttonClicked == null){
 
                     // if value was 0 i.e., empty
-                    if(state.value == 0){
-                        event(Event.SetValue(0)) // change value directly
+                    if(state.value == "0"){
+                        event(Event.SetValue("0")) // change value directly
                     }
 
                     // if value was not 0
@@ -331,7 +353,7 @@ fun ZeroButton(
                     // If a value is not been added
                     else {
                         event(Event.SetPreviousValue(state.value)) // Update the previous value
-                        event(Event.SetValue(0)) // Set the new number
+                        event(Event.SetValue("0")) // Set the new number
                         event(Event.SetButtonClickedForColor(null)) // Change the button to null
 
                         event(Event.SetValueSetAfterOperator(true))

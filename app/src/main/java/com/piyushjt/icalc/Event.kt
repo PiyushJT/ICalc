@@ -1,8 +1,9 @@
 package com.piyushjt.icalc
 
 sealed interface Event {
-    data class SetPreviousValue(val previousValue : Int?) : Event
-    data class SetValue(val value : Int) : Event
+    data class SetPreviousValue(val previousValue : String?) : Event
+    data class SetValue(val value : String) : Event
+    data class SetValueToShow(val valueToShow : String) : Event
     data class AppendValue(val value : String) : Event
     data class SetButtonClicked(val buttonClicked : String?) : Event
     data class SetEqualPressed(val isEqualPressed : Boolean) : Event
