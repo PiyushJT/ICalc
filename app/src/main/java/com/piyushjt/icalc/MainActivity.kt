@@ -90,6 +90,7 @@ fun VerticalScreen(
     }
 }
 
+var textSize = 50.sp
 
 // Value Text View
 @Composable
@@ -111,7 +112,7 @@ fun TextValue(
             text
         }
 
-        val textSize = when(textToShow.length){
+        textSize = when(textToShow.length){
             in 0..8 -> 68.sp
             9 -> 60.sp
             10 -> 60.sp

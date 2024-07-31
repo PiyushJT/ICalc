@@ -42,9 +42,18 @@ class ViewModel : ViewModel() {
                 var value = state.value.value.toDouble()
                 value = 0- value
 
-                event(Event.SetValue(value.toString()))
+                var newValue = value.toString()
 
-                Log.d("clear Everything", state.value.toString())
+                while (newValue.contains('.') && newValue.endsWith("0")){
+                    newValue = newValue.removeSuffix("0")
+                    if (newValue.endsWith('.')){
+                        newValue = newValue.removeSuffix(".")
+                    }
+                }
+
+                event(Event.SetValue(newValue))
+
+                Log.d("Change sign", state.value.toString())
             }
 
             // Clear Value
