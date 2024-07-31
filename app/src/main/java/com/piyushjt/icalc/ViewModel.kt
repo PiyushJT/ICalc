@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.sign
 
 class ViewModel : ViewModel() {
 
@@ -31,6 +32,18 @@ class ViewModel : ViewModel() {
                         isValueSetAfterOperator = false
                     )
                 }
+                Log.d("clear Everything", state.value.toString())
+            }
+
+            // Change Sign of value
+            Event.ChangeSignOfValue -> {
+
+
+                var value = state.value.value.toDouble()
+                value = 0- value
+
+                event(Event.SetValue(value.toString()))
+
                 Log.d("clear Everything", state.value.toString())
             }
 
@@ -209,8 +222,15 @@ class ViewModel : ViewModel() {
 
 // Add commas to the integer part before updating the state
 private fun formatWithCommas(value: String): String {
+    val isNegative = value.toDouble().sign == -1.0
     val parts = value.split('.')
-    val integerPart = parts[0]
+
+    val integerPart = if(isNegative){
+        parts[0].removePrefix("-")
+    } else {
+        parts[0]
+    }
+
     val fractionalPart = if (parts.size > 1) parts[1] else ""
 
     val groups = when(integerPart.length) {
@@ -227,7 +247,11 @@ private fun formatWithCommas(value: String): String {
 
     Log.d("parts", groups.toString())
 
-    val formatted = groups.joinToString(",") { it.reversed() }.reversed()
+    val formatted = if(isNegative) {
+        "-${groups.joinToString(",") { it.reversed() }.reversed()}"
+    } else {
+        groups.joinToString(",") { it.reversed() }.reversed()
+    }
 
     return if (value  in listOf("infinity", "nan")) {
         value
@@ -236,16 +260,4 @@ private fun formatWithCommas(value: String): String {
         if (fractionalPart.isNotEmpty()) "$formatted.$fractionalPart" else formatted
     }
 
-}
-
-fun addCharAtIndex(input: String, charToAdd: Char, index: Int): String {
-    // Check if the index is within the valid range
-    if (index < 0 || index > input.length) {
-        throw IllegalArgumentException("Index out of bounds.")
-    }
-
-    // Use StringBuilder to modify the string
-    val stringBuilder = StringBuilder(input)
-    stringBuilder.insert(index, charToAdd)
-    return stringBuilder.toString()
 }

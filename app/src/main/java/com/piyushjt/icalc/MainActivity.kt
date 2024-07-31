@@ -524,6 +524,8 @@ fun OtherButton(
 
                 "C" -> event(Event.ClearValue)
 
+                "+/-" -> event(Event.ChangeSignOfValue)
+
             }
 
         },
