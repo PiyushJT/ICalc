@@ -1,8 +1,6 @@
 package com.piyushjt.icalc
 
 import android.util.Log
-import androidx.compose.ui.text.substring
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -128,8 +126,11 @@ class ViewModel : ViewModel() {
                         givenValue = givenValue.substring(0, 10)
                     }
 
-                    if (givenValue.endsWith(".0")){
-                        givenValue = givenValue.substringBefore(".0")
+                    while (givenValue.contains('.') && givenValue.endsWith("0")){
+                        givenValue = givenValue.removeSuffix("0")
+                        if (givenValue.endsWith('.')){
+                            givenValue = givenValue.removeSuffix(".")
+                        }
                     }
                 }
 
@@ -235,4 +236,16 @@ private fun formatWithCommas(value: String): String {
         if (fractionalPart.isNotEmpty()) "$formatted.$fractionalPart" else formatted
     }
 
+}
+
+fun addCharAtIndex(input: String, charToAdd: Char, index: Int): String {
+    // Check if the index is within the valid range
+    if (index < 0 || index > input.length) {
+        throw IllegalArgumentException("Index out of bounds.")
+    }
+
+    // Use StringBuilder to modify the string
+    val stringBuilder = StringBuilder(input)
+    stringBuilder.insert(index, charToAdd)
+    return stringBuilder.toString()
 }

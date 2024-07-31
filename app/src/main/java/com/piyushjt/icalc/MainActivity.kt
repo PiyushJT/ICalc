@@ -32,11 +32,18 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.piyushjt.icalc.ui.theme.*
+import com.piyushjt.icalc.ui.theme.Background
+import com.piyushjt.icalc.ui.theme.NumBtnColor
+import com.piyushjt.icalc.ui.theme.OnNum
+import com.piyushjt.icalc.ui.theme.OnOrange
+import com.piyushjt.icalc.ui.theme.OnTopBtn
+import com.piyushjt.icalc.ui.theme.OrangeBtnColor
+import com.piyushjt.icalc.ui.theme.TextColor
+import com.piyushjt.icalc.ui.theme.TopBtnColor
+import com.piyushjt.icalc.ui.theme.Transparent
 
 class MainActivity : ComponentActivity() {
 
@@ -95,11 +102,29 @@ fun TextValue(
             .background(Background)
             .padding(horizontal = 20.dp, vertical = 20.dp), contentAlignment = Alignment.BottomEnd
     ) {
+
+        val textToShow = if (text.contains('e')) {
+
+            "${text.substring(0, text.indexOf('e') + 1).replace("e", "x10")}${(text.substringAfter('e'))}"
+
+        } else {
+            text
+        }
+
+        val textSize = when(textToShow.length){
+            in 0..8 -> 68.sp
+            9 -> 60.sp
+            10 -> 60.sp
+            11 -> 50.sp
+            12 -> 50.sp
+            else -> 50.sp
+        }
+
         Text(
             text = buildAnnotatedString {
-                if (text.contains('e')) {
+                if (textToShow.contains("x10")) {
 
-                    append(text.substring(0, text.indexOf('e') + 1).replace("e", "x10"))
+                    append(textToShow.substring(0, textToShow.indexOf("x10") + 3))
 
                     withStyle(
                         style = SpanStyle(
@@ -107,16 +132,16 @@ fun TextValue(
                             baselineShift = BaselineShift.Superscript
                         )
                     ) {
-                        append(text.substringAfter('e'))
+                        append(textToShow.substringAfter("x10"))
                     }
                 }
                 else {
-                    append(text)
+                    append(textToShow)
                 }
             },
             color = TextColor,
             fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontSize = 52.sp
+            fontSize = textSize
         )
     }
 }
@@ -273,19 +298,24 @@ fun NumButton(
                 // If an operation button was clicked
                 else {
 
-                    // If a value has been set after the operator was clicked
-                    if (state.isValueSetAfterOperator) {
-                        event(Event.AppendValue(text)) // Append the new number to the existing value
+                    if(state.value == "0"){
+                        event(Event.SetValue(text)) // change value directly
                     }
-
-                    // If a value is not been added
                     else {
-                        event(Event.SetPreviousValue(state.value)) // Update the previous value
-                        event(Event.SetValue(text)) // Set the new number
-                        event(Event.SetButtonClickedForColor(null)) // Change the button to null
+                        // If a value has been set after the operator was clicked
+                        if (state.isValueSetAfterOperator) {
+                            event(Event.AppendValue(text)) // Append the new number to the existing value
+                        }
 
-                        event(Event.SetValueSetAfterOperator(true))
+                        // If a value is not been added
+                        else {
+                            event(Event.SetPreviousValue(state.value)) // Update the previous value
+                            event(Event.SetValue(text)) // Set the new number
+                            event(Event.SetButtonClickedForColor(null)) // Change the button to null
 
+                            event(Event.SetValueSetAfterOperator(true))
+
+                        }
                     }
 
                 }
