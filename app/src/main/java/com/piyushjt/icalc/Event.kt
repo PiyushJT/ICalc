@@ -14,4 +14,5 @@ sealed interface Event {
     object ClearPreviousValue : Event
     object ClearAll : Event
     object ShowAns : Event
+    object CalculatePercent : Event
 }

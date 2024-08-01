@@ -523,6 +523,8 @@ fun OtherButton(
 
                 "+/-" -> event(Event.ChangeSignOfValue)
 
+                "%" -> event(Event.CalculatePercent)
+
             }
 
         },

@@ -234,6 +234,35 @@ class ViewModel : ViewModel() {
                 }
             }
 
+            is Event.CalculatePercent -> {
+
+                val value = state.value.value.toDouble()
+                val previousValue = state.value.previousValue?.toDouble()
+                val buttonClicked = state.value.buttonClicked
+
+                if (buttonClicked == null && previousValue == null){
+
+                    val ans = value / 100
+
+                    event(Event.SetValue(ans.toString()))
+
+                } else {
+
+                    if (buttonClicked in listOf("+", "-", "÷")) {
+                        event(Event.SetValue((value * previousValue!! / 100).toString()))
+                        event(Event.ShowAns)
+                    }
+                    else {
+                        event(Event.SetValue("${value * previousValue!! / 100}"))
+                        event(Event.ClearPreviousValue)
+                        event(Event.SetButtonClicked(null))
+                        event(Event.SetButtonClickedForColor(null))
+                        event(Event.SetEqualPressed(true))
+                    }
+
+                }
+            }
+
         }
 
     }
