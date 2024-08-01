@@ -83,19 +83,22 @@ fun VerticalScreen(
     ) {
 
         // Value text view
-        TextValue(text = state.valueToShow)
+        TextValue(
+            text = state.valueToShow,
+            state = state
+        )
 
         // Buttons in grid layout
         VerticalButtons(event = event, state = state)
     }
 }
 
-var textSize = 50.sp
 
 // Value Text View
 @Composable
 fun TextValue(
-    text: String
+    text: String,
+    state: State
 ) {
     Box(
         modifier = Modifier
@@ -112,14 +115,7 @@ fun TextValue(
             text
         }
 
-        textSize = when(textToShow.length){
-            in 0..8 -> 68.sp
-            9 -> 60.sp
-            10 -> 60.sp
-            11 -> 50.sp
-            12 -> 50.sp
-            else -> 50.sp
-        }
+
 
         Text(
             text = buildAnnotatedString {
@@ -142,7 +138,7 @@ fun TextValue(
             },
             color = TextColor,
             fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontSize = textSize
+            fontSize = state.textSize.sp
         )
     }
 }

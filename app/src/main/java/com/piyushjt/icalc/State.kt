@@ -3,6 +3,7 @@ package com.piyushjt.icalc
 data class State(
     val value : String = "0",
     val valueToShow : String = "0",
+    val textSize : Int = 50,
     val previousValue: String? = null,
     val buttonClicked : String? = null,
     val buttonClickedForColor : String? = null,

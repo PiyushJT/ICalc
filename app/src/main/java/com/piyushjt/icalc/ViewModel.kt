@@ -159,12 +159,23 @@ class ViewModel : ViewModel() {
 
                 val formattedValue = formatWithCommas(givenValue)
 
+                val textSize = when(formattedValue.length){
+                    in 0..8 -> 68
+                    9 -> 60
+                    10 -> 60
+                    11 -> 50
+                    12 -> 50
+                    else -> 50
+                }
+
                 _state.update {
                     it.copy(
-                        valueToShow = formattedValue
+                        valueToShow = formattedValue,
+                        textSize = textSize
                     )
                 }
                 Log.d("set value to show", state.value.valueToShow)
+                Log.d("text size", state.value.textSize.toString())
             }
 
             // Append Value
