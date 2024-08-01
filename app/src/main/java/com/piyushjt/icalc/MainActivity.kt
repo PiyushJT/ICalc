@@ -236,8 +236,9 @@ fun DotButton(
 ) {
     Button(
         onClick = {
-            if(!state.value.toString().contains(".")){
-                // TODO: append .
+            if(!state.value.contains(".")){
+                event(Event.SetDotPressed(true))
+                event(Event.AppendValue("."))
             }
         },
         modifier= Modifier
@@ -426,6 +427,8 @@ fun OppButton(
 ) {
     Button(
         onClick = {
+
+            event(Event.SetDotPressed(false))
 
             // If equal to button is clicked
             if (text == "=") {

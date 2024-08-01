@@ -8,5 +8,6 @@ data class State(
     val buttonClicked : String? = null,
     val buttonClickedForColor : String? = null,
     val isEqualPressed : Boolean = false,
+    val isDotPressed : Boolean = false,
     val isValueSetAfterOperator: Boolean = false
 )

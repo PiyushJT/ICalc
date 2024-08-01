@@ -9,6 +9,7 @@ sealed interface Event {
     data class SetEqualPressed(val isEqualPressed : Boolean) : Event
     data class SetButtonClickedForColor(val buttonClickedForColor : String?) : Event
     data class SetValueSetAfterOperator(val isSet: Boolean) : Event
+    data class SetDotPressed(val isPressed: Boolean) : Event
     object ClearValue : Event
     object ChangeSignOfValue : Event
     object ClearPreviousValue : Event

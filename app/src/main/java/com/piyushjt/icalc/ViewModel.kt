@@ -26,6 +26,7 @@ class ViewModel : ViewModel() {
                         value = "0",
                         textSize = 68,
                         valueToShow = "0",
+                        isDotPressed = false,
                         previousValue = null,
                         buttonClicked = null,
                         buttonClickedForColor = null,
@@ -63,10 +64,11 @@ class ViewModel : ViewModel() {
                     it.copy(
                         value = "0",
                         valueToShow = "0",
+                        isDotPressed = false,
                         textSize = 68
                     )
                 }
-                Log.d("clear value", state.value.value.toString())
+                Log.d("clear value", state.value.value)
             }
 
             // Clear Previous value
@@ -150,16 +152,19 @@ class ViewModel : ViewModel() {
                         givenValue = givenValue.substring(0, 10)
                     }
 
-                    while (givenValue.contains('.') && givenValue.endsWith("0")){
-                        givenValue = givenValue.removeSuffix("0")
-                        if (givenValue.endsWith('.')){
-                            givenValue = givenValue.removeSuffix(".")
+                    if (!state.value.isDotPressed) {
+                        while (givenValue.contains('.') && givenValue.endsWith("0")) {
+                            givenValue = givenValue.removeSuffix("0")
+                            if (givenValue.endsWith('.')) {
+                                givenValue = givenValue.removeSuffix(".")
+                            }
                         }
                     }
+
                 }
 
 
-                val formattedValue = formatWithCommas(givenValue)
+                val formattedValue = formatWithCommas(givenValue, state.value.isDotPressed)
 
                 val textSize =
                     if(formattedValue.contains(',')) {
@@ -224,8 +229,20 @@ class ViewModel : ViewModel() {
                 }
             }
 
+            // Set Dot Pressed
+            is Event.SetDotPressed -> {
+                _state.update {
+                    it.copy(
+                        isDotPressed = event.isPressed
+                    )
+                }
+                Log.d("Set dot pressed", state.value.isDotPressed.toString())
+            }
+
             // Show Answer
             is Event.ShowAns -> {
+
+                event(Event.SetDotPressed(false))
 
                 if (state.value.previousValue != null && state.value.buttonClicked != null){
 
@@ -294,7 +311,7 @@ class ViewModel : ViewModel() {
 }
 
 // Add commas to the integer part before updating the state
-private fun formatWithCommas(value: String): String {
+private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
     val isNegative = value.toDouble().sign == -1.0
     val parts = value.split('.')
 
@@ -330,7 +347,7 @@ private fun formatWithCommas(value: String): String {
         value
     }
     else {
-        if (fractionalPart.isNotEmpty()) "$formatted.$fractionalPart" else formatted
+        if (fractionalPart.isNotEmpty() || isDotPressed) "$formatted.$fractionalPart" else formatted
     }
 
 }
