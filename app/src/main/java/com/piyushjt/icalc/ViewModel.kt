@@ -24,6 +24,7 @@ class ViewModel : ViewModel() {
                 _state.update {
                     it.copy(
                         value = "0",
+                        textSize = 68,
                         valueToShow = "0",
                         previousValue = null,
                         buttonClicked = null,
@@ -61,7 +62,8 @@ class ViewModel : ViewModel() {
                 _state.update {
                     it.copy(
                         value = "0",
-                        valueToShow = "0"
+                        valueToShow = "0",
+                        textSize = 68
                     )
                 }
                 Log.d("clear value", state.value.value.toString())
@@ -159,14 +161,35 @@ class ViewModel : ViewModel() {
 
                 val formattedValue = formatWithCommas(givenValue)
 
-                val textSize = when(formattedValue.length){
-                    in 0..8 -> 68
-                    9 -> 60
-                    10 -> 60
-                    11 -> 50
-                    12 -> 50
-                    else -> 50
-                }
+                val textSize =
+                    if(formattedValue.contains(',')) {
+                        when (formattedValue.length) {
+                            in 0..8 -> 68
+                            9 -> 64
+                            10 -> 60
+                            11 -> 54
+                            12 -> 50
+                            else -> 50
+                        }
+                    } else if(formattedValue.contains('e')) {
+                        when (formattedValue.length) {
+                            in 0..8 -> 64
+                            9 -> 52
+                            10 -> 48
+                            11 -> 44
+                            12 -> 40
+                            else -> 36
+                        }
+                    } else{
+                        when (formattedValue.length) {
+                            in 0..8 -> 68
+                            9 -> 56
+                            10 -> 52
+                            11 -> 48
+                            12 -> 44
+                            else -> 40
+                        }
+                    }
 
                 _state.update {
                     it.copy(
@@ -254,11 +277,12 @@ class ViewModel : ViewModel() {
                     }
                     else {
                         event(Event.SetValue("${value * previousValue!! / 100}"))
-                        event(Event.ClearPreviousValue)
-                        event(Event.SetButtonClicked(null))
-                        event(Event.SetButtonClickedForColor(null))
-                        event(Event.SetEqualPressed(true))
                     }
+
+                    event(Event.ClearPreviousValue)
+                    event(Event.SetButtonClicked(null))
+                    event(Event.SetButtonClickedForColor(null))
+                    event(Event.SetEqualPressed(true))
 
                 }
             }
