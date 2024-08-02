@@ -37,6 +37,31 @@ class ViewModel : ViewModel() {
                 Log.d("clear Everything", state.value.toString())
             }
 
+            Event.ClearLastChar -> {
+
+                val value = state.value.value
+
+                if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
+
+                    var newValue : String
+
+                    if (value.length < 2){
+                        newValue = "0"
+                    }
+                    else {
+                        newValue = value.substring(0, value.length - 1)
+                    }
+
+                    event(Event.SetValue(newValue))
+
+                    Log.d("clear last char", newValue)
+
+                }
+
+
+                Log.d("clear Everything", state.value.value)
+            }
+
             // Change Sign of value
             Event.ChangeSignOfValue -> {
 
@@ -55,7 +80,7 @@ class ViewModel : ViewModel() {
 
                 event(Event.SetValue(newValue))
 
-                Log.d("Change sign", state.value.toString())
+                Log.d("Change sign", state.value.value)
             }
 
             // Clear Value

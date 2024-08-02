@@ -21,10 +21,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -44,6 +49,7 @@ import com.piyushjt.icalc.ui.theme.OrangeBtnColor
 import com.piyushjt.icalc.ui.theme.TextColor
 import com.piyushjt.icalc.ui.theme.TopBtnColor
 import com.piyushjt.icalc.ui.theme.Transparent
+import kotlinx.coroutines.coroutineScope
 
 class MainActivity : ComponentActivity() {
 
@@ -85,7 +91,8 @@ fun VerticalScreen(
         // Value text view
         TextValue(
             text = state.valueToShow,
-            state = state
+            state = state,
+            event = event
         )
 
         // Buttons in grid layout
@@ -98,13 +105,35 @@ fun VerticalScreen(
 @Composable
 fun TextValue(
     text: String,
-    state: State
+    state: State,
+    event: (Event) -> Unit
 ) {
+
+    var isEventTriggered = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Background)
-            .padding(horizontal = 20.dp, vertical = 20.dp), contentAlignment = Alignment.BottomEnd
+            .padding(horizontal = 20.dp, vertical = 20.dp).pointerInput(Unit) {
+                coroutineScope {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                            if (event.type == PointerEventType.Move) {
+                                if (!isEventTriggered.value) {
+                                    event(Event.ClearLastChar)
+                                    isEventTriggered.value = true
+                                }
+                            }
+                            if (event.type == PointerEventType.Release) {
+                                isEventTriggered.value = false
+                            }
+                        }
+                    }
+                }
+            },
+        contentAlignment = Alignment.BottomEnd
     ) {
 
         val textToShow = if (text.contains('e')) {
@@ -142,6 +171,7 @@ fun TextValue(
         )
     }
 }
+
 
 
 // Buttons on grid format
