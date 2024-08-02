@@ -285,6 +285,7 @@ class ViewModel : ViewModel() {
                     val ans = value / 100
 
                     event(Event.SetValue(ans.toString()))
+                    event(Event.SetEqualPressed(true))
 
                 } else {
 
@@ -294,6 +295,11 @@ class ViewModel : ViewModel() {
                     }
                     else {
                         event(Event.SetValue("${value * previousValue!! / 100}"))
+                        _state.update {
+                            it.copy(
+                                isValueSetAfterOperator = false
+                            )
+                        }
                     }
 
                     event(Event.ClearPreviousValue)

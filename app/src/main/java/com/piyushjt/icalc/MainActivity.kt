@@ -236,9 +236,28 @@ fun DotButton(
 ) {
     Button(
         onClick = {
-            if(!state.value.contains(".")){
+            if(state.isEqualPressed){
                 event(Event.SetDotPressed(true))
-                event(Event.AppendValue("."))
+                event(Event.SetValue("0."))
+                event(Event.SetValueSetAfterOperator(false))
+                event(Event.SetEqualPressed(false))
+            }
+            else {
+                if (!state.value.contains(".")) {
+                    event(Event.SetDotPressed(true))
+
+                    if (state.buttonClickedForColor != null) {
+                        event(Event.SetPreviousValue(state.value))
+                        event(Event.SetValue("0."))
+                        event(Event.SetValueSetAfterOperator(true))
+                    } else {
+                        event(Event.AppendValue("."))
+                    }
+                } else if (state.buttonClickedForColor != null) {
+                    event(Event.SetDotPressed(true))
+                    event(Event.SetValue("0."))
+                    event(Event.SetValueSetAfterOperator(true))
+                }
             }
         },
         modifier= Modifier
@@ -307,12 +326,17 @@ fun NumButton(
 
                         // If a value is not been added
                         else {
-                            event(Event.SetPreviousValue(state.value)) // Update the previous value
-                            event(Event.SetValue(text)) // Set the new number
-                            event(Event.SetButtonClickedForColor(null)) // Change the button to null
+                            if (state.value == "0."){
+                                event(Event.AppendValue(text))
+                            }
+                            else {
+                                event(Event.SetPreviousValue(state.value)) // Update the previous value
+                                event(Event.SetValue(text)) // Set the new number
+                                event(Event.SetButtonClickedForColor(null)) // Change the button to null
+
+                            }
 
                             event(Event.SetValueSetAfterOperator(true))
-
                         }
                     }
 
@@ -454,6 +478,9 @@ fun OppButton(
                         // Set button clicked
                         event(Event.SetButtonClicked(text))
                         event(Event.SetButtonClickedForColor(text))
+                        if (state.valueToShow == "0") {
+                            event(Event.ShowAns)
+                        }
                     }
 
                     // If operation button was clicked previously
