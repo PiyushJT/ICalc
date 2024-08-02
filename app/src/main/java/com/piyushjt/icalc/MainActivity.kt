@@ -63,6 +63,7 @@ class MainActivity : ComponentActivity() {
             // State
             val state by viewModel.state.collectAsState()
 
+            // Vertical Screen
             VerticalScreen(
                 state = state,
                 event = viewModel::event
@@ -108,25 +109,31 @@ fun TextValue(
     state: State,
     event: (Event) -> Unit
 ) {
-
+    // State of event trigger
     var isEventTriggered = remember { mutableStateOf(false) }
 
+    // Container for text value
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Background)
-            .padding(horizontal = 20.dp, vertical = 20.dp).pointerInput(Unit) {
+            .padding(horizontal = 20.dp, vertical = 20.dp)
+
+            // Swipe Listener
+            .pointerInput(Unit) {
                 coroutineScope {
                     awaitPointerEventScope {
                         while (true) {
-                            val event = awaitPointerEvent(PointerEventPass.Initial)
-                            if (event.type == PointerEventType.Move) {
+                            val pointerEvent = awaitPointerEvent(PointerEventPass.Initial)
+
+                            if (pointerEvent.type == PointerEventType.Move) {
+
                                 if (!isEventTriggered.value) {
                                     event(Event.ClearLastChar)
                                     isEventTriggered.value = true
                                 }
                             }
-                            if (event.type == PointerEventType.Release) {
+                            if (pointerEvent.type == PointerEventType.Release) {
                                 isEventTriggered.value = false
                             }
                         }
@@ -145,9 +152,11 @@ fun TextValue(
         }
 
 
-
+        // Text Value
         Text(
             text = buildAnnotatedString {
+
+                // Showing power in superscript
                 if (textToShow.contains("x10")) {
 
                     append(textToShow.substring(0, textToShow.indexOf("x10") + 3))
@@ -173,8 +182,7 @@ fun TextValue(
 }
 
 
-
-// Buttons on grid format
+// Buttons in grid format
 @Composable
 fun VerticalButtons(
     event: (Event) -> Unit,
@@ -193,7 +201,6 @@ fun VerticalButtons(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
-
             // Showing text in buttons as needed
             OtherButton(event = event, text = if (state.value != "0") "C" else "AC")
 
@@ -209,6 +216,7 @@ fun VerticalButtons(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
+            // Showing text in buttons as needed
             NumButton(state = state, event = event, text = "7")
             NumButton(state = state, event = event, text = "8")
             NumButton(state = state, event = event, text = "9")
@@ -222,6 +230,7 @@ fun VerticalButtons(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
+            // Showing text in buttons as needed
             NumButton(state = state, event = event, text = "4")
             NumButton(state = state, event = event, text = "5")
             NumButton(state = state, event = event, text = "6")
@@ -235,6 +244,7 @@ fun VerticalButtons(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
+            // Showing text in buttons as needed
             NumButton(state = state, event = event, text = "1")
             NumButton(state = state, event = event, text = "2")
             NumButton(state = state, event = event, text = "3")
@@ -248,6 +258,7 @@ fun VerticalButtons(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
+            // Showing text in buttons as needed
             ZeroButton(state = state, event = event)
             DotButton(state = state, event = event,)
             OppButton(state = state, event = event, text = "=")
@@ -258,7 +269,7 @@ fun VerticalButtons(
 }
 
 
-// To be completed later
+// Dot Button
 @Composable
 fun DotButton(
     event: (Event) -> Unit,
@@ -266,26 +277,36 @@ fun DotButton(
 ) {
     Button(
         onClick = {
-            if(state.isEqualPressed){
-                event(Event.SetDotPressed(true))
-                event(Event.SetValue("0."))
-                event(Event.SetValueSetAfterOperator(false))
-                event(Event.SetEqualPressed(false))
-            }
-            else {
-                if (!state.value.contains(".")) {
-                    event(Event.SetDotPressed(true))
 
+            // If equal button was pressed
+            if(state.isEqualPressed){
+                event(Event.SetDotPressed(true)) // Set dot pressed to true
+                event(Event.SetValue("0.")) // Set value to 0.
+                event(Event.SetValueSetAfterOperator(false)) // Set value set after operator to false
+                event(Event.SetEqualPressed(false)) // Set equal pressed to false
+            }
+
+            // If equal button was not pressed
+            else {
+
+                // If dot is not present already
+                if (!state.value.contains(".")) {
+                    event(Event.SetDotPressed(true)) // Set dot pressed to true
+
+                    // If operation button was just clicked
                     if (state.buttonClickedForColor != null) {
-                        event(Event.SetPreviousValue(state.value))
-                        event(Event.SetValue("0."))
+                        event(Event.SetPreviousValue(state.value)) // Set previous value to $currentValue
+                        event(Event.SetValue("0.")) // Set value to 0.
                         event(Event.SetValueSetAfterOperator(true))
                     } else {
-                        event(Event.AppendValue("."))
+                        event(Event.AppendValue(".")) // Append .
                     }
-                } else if (state.buttonClickedForColor != null) {
-                    event(Event.SetDotPressed(true))
-                    event(Event.SetValue("0."))
+                }
+
+                // If operation button was just clicked
+                else if (state.buttonClickedForColor != null) {
+                    event(Event.SetDotPressed(true)) // Set dot pressed to true
+                    event(Event.SetValue("0.")) // Set value to 0.
                     event(Event.SetValueSetAfterOperator(true))
                 }
             }
@@ -308,7 +329,7 @@ fun DotButton(
 }
 
 
- // Number button
+// Number button
 @Composable
 fun NumButton(
     event: (Event) -> Unit,
@@ -393,7 +414,7 @@ fun NumButton(
 }
 
 
-// Number button (zero)
+// Zero button
 @Composable
 fun ZeroButton(
     state: State,

@@ -16,94 +16,126 @@ class ViewModel : ViewModel() {
     // Event function
     fun event(event: Event){
 
-
         when (event) {
 
-            // Clear All
-            Event.ClearAll -> {
+            // Set Value
+            is Event.SetValue -> {
                 _state.update {
                     it.copy(
-                        value = "0",
-                        textSize = 68,
-                        valueToShow = "0",
-                        isDotPressed = false,
-                        previousValue = null,
-                        buttonClicked = null,
-                        buttonClickedForColor = null,
-                        isEqualPressed = false,
-                        isValueSetAfterOperator = false
+                        value = event.value
                     )
                 }
-                Log.d("clear Everything", state.value.toString())
+                event(Event.SetValueToShow(state.value.value))
+
+                Log.d("set value", state.value.value)
             }
 
-            Event.ClearLastChar -> {
-
-                val value = state.value.value
-
-                if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
-
-                    var newValue : String
-
-                    if (value.length < 2){
-                        newValue = "0"
-                    }
-                    else {
-                        newValue = value.substring(0, value.length - 1)
+            // Append Value
+            is Event.AppendValue -> {
+                // Only append if length is less than 9
+                if (state.value.value.length <= 8) {
+                    _state.update {
+                        it.copy(
+                            value = "${state.value.value}${event.value}"
+                        )
                     }
 
-                    event(Event.SetValue(newValue))
+                    event(Event.SetValueToShow(state.value.value))
+                }
+                Log.d("append value", state.value.value)
+            }
 
-                    Log.d("clear last char", newValue)
+            // Set Value To Show
+            is Event.SetValueToShow -> {
+
+                // Defining value
+                var givenValue = event.valueToShow.lowercase()
+
+                // FORMATING VALUE TO BE SHOWN ON SCREEN
+
+                // Limiting length of value if it contains e
+                if (givenValue.contains("e")) {
+                    var indexOfe = givenValue.indexOf('e')
+
+                    while (givenValue.substring(0, indexOfe).length >7) {
+                        givenValue = givenValue.substring(0, indexOfe-1) + givenValue.substring(indexOfe)
+                        indexOfe = givenValue.indexOf('e')
+                    }
+
+                }
+                else if (givenValue.contains('.') && !givenValue.contains('e')){
+
+                    // Limiting length of value if it doesn't contain e
+                    while (givenValue.length > 10){
+                        givenValue = givenValue.substring(0, 10)
+                    }
+
+                    // Not showing . if it is not pressed by user
+                    if (!state.value.isDotPressed) {
+                        while (givenValue.contains('.') && givenValue.endsWith("0")) {
+                            givenValue = givenValue.removeSuffix("0")
+                            if (givenValue.endsWith('.')) {
+                                givenValue = givenValue.removeSuffix(".")
+                            }
+                        }
+                    }
 
                 }
 
-
-                Log.d("clear Everything", state.value.value)
-            }
-
-            // Change Sign of value
-            Event.ChangeSignOfValue -> {
+                // Formating value with commas
+                val formattedValue = formatWithCommas(givenValue, state.value.isDotPressed)
 
 
-                var value = state.value.value.toDouble()
-                value = 0- value
-
-                var newValue = value.toString()
-
-                while (newValue.contains('.') && newValue.endsWith("0")){
-                    newValue = newValue.removeSuffix("0")
-                    if (newValue.endsWith('.')){
-                        newValue = newValue.removeSuffix(".")
+                // Defining text size based on value of length
+                val textSize =
+                    if(formattedValue.contains(',')) {
+                        when (formattedValue.length) {
+                            in 0..8 -> 68
+                            9 -> 64
+                            10 -> 60
+                            11 -> 54
+                            12 -> 50
+                            else -> 50
+                        }
+                    } else if(formattedValue.contains('e')) {
+                        when (formattedValue.length) {
+                            in 0..8 -> 64
+                            9 -> 52
+                            10 -> 48
+                            11 -> 44
+                            12 -> 40
+                            else -> 36
+                        }
+                    } else{
+                        when (formattedValue.length) {
+                            in 0..8 -> 68
+                            9 -> 56
+                            10 -> 52
+                            11 -> 48
+                            12 -> 44
+                            else -> 40
+                        }
                     }
-                }
 
-                event(Event.SetValue(newValue))
-
-                Log.d("Change sign", state.value.value)
-            }
-
-            // Clear Value
-            Event.ClearValue -> {
+                // Updating the state
                 _state.update {
                     it.copy(
-                        value = "0",
-                        valueToShow = "0",
-                        isDotPressed = false,
-                        textSize = 68
+                        valueToShow = formattedValue,
+                        textSize = textSize
                     )
                 }
-                Log.d("clear value", state.value.value)
+                Log.d("set value to show", state.value.valueToShow)
+                Log.d("text size", state.value.textSize.toString())
             }
 
-            // Clear Previous value
-            Event.ClearPreviousValue -> {
+            // Set Previous value
+            is Event.SetPreviousValue -> {
                 _state.update {
                     it.copy(
-                        previousValue = null
+                        previousValue = event.previousValue
                     )
                 }
-                Log.d("clear previous value", state.value.previousValue.toString())
+                Log.d("set previous value", state.value.previousValue.toString())
             }
 
             // Set Button clicked
@@ -136,113 +168,14 @@ class ViewModel : ViewModel() {
                 Log.d("set equal pressed", state.value.isEqualPressed.toString())
             }
 
-            // Set Previous value
-            is Event.SetPreviousValue -> {
+            // Set Dot Pressed
+            is Event.SetDotPressed -> {
                 _state.update {
                     it.copy(
-                        previousValue = event.previousValue
+                        isDotPressed = event.isPressed
                     )
                 }
-                Log.d("set previous value", state.value.previousValue.toString())
-            }
-
-            // Set Value
-            is Event.SetValue -> {
-                _state.update {
-                    it.copy(
-                        value = event.value
-                    )
-                }
-                event(Event.SetValueToShow(state.value.value))
-
-                Log.d("set value", state.value.value)
-            }
-
-            // Set Value To Show
-            is Event.SetValueToShow -> {
-
-                var givenValue = event.valueToShow.lowercase()
-
-                if (givenValue.contains("e")) {
-                    var indexOfe = givenValue.indexOf('e')
-
-                    while (givenValue.substring(0, indexOfe).length >7) {
-                        givenValue = givenValue.substring(0, indexOfe-1) + givenValue.substring(indexOfe)
-                        indexOfe = givenValue.indexOf('e')
-                    }
-
-                }
-                else if (givenValue.contains('.') && !givenValue.contains('e')){
-                    while (givenValue.length > 10){
-                        givenValue = givenValue.substring(0, 10)
-                    }
-
-                    if (!state.value.isDotPressed) {
-                        while (givenValue.contains('.') && givenValue.endsWith("0")) {
-                            givenValue = givenValue.removeSuffix("0")
-                            if (givenValue.endsWith('.')) {
-                                givenValue = givenValue.removeSuffix(".")
-                            }
-                        }
-                    }
-
-                }
-
-
-                val formattedValue = formatWithCommas(givenValue, state.value.isDotPressed)
-
-                val textSize =
-                    if(formattedValue.contains(',')) {
-                        when (formattedValue.length) {
-                            in 0..8 -> 68
-                            9 -> 64
-                            10 -> 60
-                            11 -> 54
-                            12 -> 50
-                            else -> 50
-                        }
-                    } else if(formattedValue.contains('e')) {
-                        when (formattedValue.length) {
-                            in 0..8 -> 64
-                            9 -> 52
-                            10 -> 48
-                            11 -> 44
-                            12 -> 40
-                            else -> 36
-                        }
-                    } else{
-                        when (formattedValue.length) {
-                            in 0..8 -> 68
-                            9 -> 56
-                            10 -> 52
-                            11 -> 48
-                            12 -> 44
-                            else -> 40
-                        }
-                    }
-
-                _state.update {
-                    it.copy(
-                        valueToShow = formattedValue,
-                        textSize = textSize
-                    )
-                }
-                Log.d("set value to show", state.value.valueToShow)
-                Log.d("text size", state.value.textSize.toString())
-            }
-
-            // Append Value
-            is Event.AppendValue -> {
-                if (state.value.value.length <= 8) {
-                    _state.update {
-                        it.copy(
-                            value = "${state.value.value}${event.value}"
-                        )
-                    }
-
-                    event(Event.SetValueToShow(state.value.value))
-                }
-                Log.d("append value", state.value.value)
+                Log.d("Set dot pressed", state.value.isDotPressed.toString())
             }
 
             // Set Value set after operator
@@ -254,14 +187,62 @@ class ViewModel : ViewModel() {
                 }
             }
 
-            // Set Dot Pressed
-            is Event.SetDotPressed -> {
+            // Clear All
+            Event.ClearAll -> {
                 _state.update {
                     it.copy(
-                        isDotPressed = event.isPressed
+                        value = "0",
+                        valueToShow = "0",
+                        textSize = 68,
+                        previousValue = null,
+                        buttonClicked = null,
+                        buttonClickedForColor = null,
+                        isEqualPressed = false,
+                        isDotPressed = false,
+                        isValueSetAfterOperator = false
                     )
                 }
-                Log.d("Set dot pressed", state.value.isDotPressed.toString())
+                Log.d("Clear Everything", state.value.toString())
+            }
+
+            // Clear Value
+            Event.ClearValue -> {
+                _state.update {
+                    it.copy(
+                        value = "0",
+                        valueToShow = "0",
+                        isDotPressed = false,
+                        textSize = 68
+                    )
+                }
+                Log.d("clear value", state.value.value)
+            }
+
+            // Clear Previous value
+            Event.ClearPreviousValue -> {
+                _state.update {
+                    it.copy(
+                        previousValue = null
+                    )
+                }
+                Log.d("clear previous value", state.value.previousValue.toString())
+            }
+
+            // Clear Last Char (delete on swipe)
+            Event.ClearLastChar -> {
+
+                val value = state.value.value
+
+                // Only clear if possible
+                if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
+
+                    val newValue = if (value.length < 2) "0" else value.substring(0, value.length - 1)
+
+                    event(Event.SetValue(newValue))
+
+                    Log.d("Clear last", newValue)
+
+                }
             }
 
             // Show Answer
@@ -284,7 +265,7 @@ class ViewModel : ViewModel() {
 
                         "÷" -> "${preValue / value}"
 
-                        else -> "0"
+                        else -> "Error"
 
                     }
 
@@ -299,12 +280,15 @@ class ViewModel : ViewModel() {
                 }
             }
 
+            // Calculate Percentage
             is Event.CalculatePercent -> {
 
+                // Defining values
                 val value = state.value.value.toDouble()
                 val previousValue = state.value.previousValue?.toDouble()
                 val buttonClicked = state.value.buttonClicked
 
+                // If only one value is given
                 if (buttonClicked == null && previousValue == null){
 
                     val ans = value / 100
@@ -314,10 +298,13 @@ class ViewModel : ViewModel() {
 
                 } else {
 
+                    // If multiply was not clicked
                     if (buttonClicked in listOf("+", "-", "÷")) {
                         event(Event.SetValue((value * previousValue!! / 100).toString()))
                         event(Event.ShowAns)
                     }
+
+                    // If multiply was clicked
                     else {
                         event(Event.SetValue("${value * previousValue!! / 100}"))
                         _state.update {
@@ -327,6 +314,7 @@ class ViewModel : ViewModel() {
                         }
                     }
 
+                    // Clear everything and set equal pressed to true
                     event(Event.ClearPreviousValue)
                     event(Event.SetButtonClicked(null))
                     event(Event.SetButtonClickedForColor(null))
@@ -335,14 +323,38 @@ class ViewModel : ViewModel() {
                 }
             }
 
+            // Change Sign of value
+            Event.ChangeSignOfValue -> {
+
+                // Defining value
+                var value = state.value.value.toDouble()
+                value = 0- value
+
+                var newValue = value.toString()
+
+                // Removing trailing zeros after .
+                while (newValue.contains('.') && newValue.endsWith("0")){
+                    newValue = newValue.removeSuffix("0")
+                    if (newValue.endsWith('.')){
+                        newValue = newValue.removeSuffix(".")
+                    }
+                }
+
+                event(Event.SetValue(newValue))
+
+                Log.d("Change sign", state.value.value)
+            }
+
         }
 
     }
 
 }
 
-// Add commas to the integer part before updating the state
+// Function to Format value with commas
 private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
+
+    // DEFINING SOME VALUES
     val isNegative = value.toDouble().sign == -1.0
     val parts = value.split('.')
 
@@ -354,6 +366,7 @@ private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
 
     val fractionalPart = if (parts.size > 1) parts[1] else ""
 
+    // Making groups separated by commas
     val groups = when(integerPart.length) {
         0 -> listOf()
         in 1 .. 3 -> listOf(integerPart)
@@ -368,12 +381,14 @@ private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
 
     Log.d("parts", groups.toString())
 
+    // Formated value
     val formatted = if(isNegative) {
         "-${groups.joinToString(",") { it.reversed() }.reversed()}"
     } else {
         groups.joinToString(",") { it.reversed() }.reversed()
     }
 
+    // Returning value as per conditions
     return if (value  in listOf("infinity", "nan")) {
         value
     }

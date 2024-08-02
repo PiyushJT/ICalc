@@ -6,6 +6,7 @@ This is a Calculator for android smartphones which mimics IOS calculator's UI
 ## Features
 
 - Open Source
+- Swipe to Delete
 - Cool UI
 
 
