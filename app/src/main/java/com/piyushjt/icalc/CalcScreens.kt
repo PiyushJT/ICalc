@@ -25,22 +25,28 @@ fun HorizontalScreen(
     event: (Event) -> Unit
 ) {
 
-    Log.d("Height", LocalConfiguration.current.screenHeightDp.toString())
-    Log.d("Width", LocalConfiguration.current.screenWidthDp.toString())
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+
+    Log.d("Height", screenHeight.toString())
+    Log.d("Width", screenWidth.toString())
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
             .padding(
+                start = state.statusBarSize,
                 bottom = WindowInsets.navigationBars
                     .asPaddingValues()
                     .calculateBottomPadding(),
-                start = state.statusBarSize,
-                end = WindowInsets.navigationBars.asPaddingValues().calculateEndPadding(
-                    LayoutDirection.Ltr
-                )
-            ),
+                end = WindowInsets.navigationBars
+                    .asPaddingValues()
+                    .calculateEndPadding(
+                        LayoutDirection.Ltr
+                    )
+            )
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
 
@@ -48,12 +54,12 @@ fun HorizontalScreen(
         TextValue(
             state = state,
             event = event,
-            height = (0.15 * (LocalConfiguration.current.screenHeightDp)).dp,
+            height = (0.15 * screenHeight).dp,
             textSize = null
         )
 
         // Buttons in grid layout
-        HorizontalButtons(event = event, state = state)
+        HorizontalButtons(event = event, state = state, screenHeight = screenHeight, screenWidth = screenWidth)
     }
 }
 

@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -97,37 +96,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(
-    showSystemUi = true
-)
-@Composable
-private fun Screen() {
-    val configuration = LocalConfiguration.current
-    val aspectRatio = configuration.screenWidthDp / configuration.screenHeightDp
-
-    // View Model (MVVM)
-    val viewModel = ViewModel()
-    val state by viewModel.state.collectAsState()
-
-
-    if(aspectRatio < 0.8) {
-
-        // Vertical Screen
-        VerticalScreen(
-            state = state,
-            event = viewModel::event
-        )
-    }
-    else {
-        // Horizontal Screen
-        HorizontalScreen(
-            state = state,
-            event = viewModel::event
-        )
-    }
-}
-
-
 // Value Text View
 @SuppressLint("ReturnFromAwaitPointerEventScope")
 @Composable
@@ -144,8 +112,7 @@ fun TextValue(
     Box(
         modifier = Modifier
             .padding(
-                start = 20.dp, end = 20.dp,
-                bottom = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp
+                horizontal = 20.dp
             )
             .fillMaxWidth()
             .background(Background)
@@ -179,7 +146,7 @@ fun TextValue(
 
             "${state.valueToShow
                 .substring(0, state.valueToShow.indexOf('e') + 1)
-                .replace("e", "x10")}${(state.value.substringAfter('e'))}"
+                .replace("e", "x10")}${(state.valueToShow.substringAfter('e'))}"
 
         } else {
             state.valueToShow
@@ -197,7 +164,7 @@ fun TextValue(
 
                     withStyle(
                         style = SpanStyle(
-                            fontSize = 24.sp,
+                            fontSize = if(textSize == null) 14.sp else 24.sp,
                             baselineShift = BaselineShift.Superscript
                         )
                     ) {
@@ -214,5 +181,3 @@ fun TextValue(
         )
     }
 }
-
-

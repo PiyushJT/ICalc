@@ -41,9 +41,10 @@ fun DotButton(
     event: (Event) -> Unit,
     state: State,
     height : Dp,
-    width : Dp
+    width : Dp,
+    textSize : Int
 ) {
-    Button(
+    TextButton(
         onClick = {
 
             // If equal button was pressed
@@ -89,7 +90,7 @@ fun DotButton(
         Text(
             text = ".",
             color = White,
-            fontSize = 32.sp,
+            fontSize = textSize.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
         )
@@ -256,7 +257,7 @@ fun ZeroButton(
                 .padding(
                     start =
                     if (textSize == 24)
-                        (0.007 * (LocalConfiguration.current.screenWidthDp)).dp
+                        0.dp
                     else
                         (0.02 * (LocalConfiguration.current.screenWidthDp)).dp
                 ),
