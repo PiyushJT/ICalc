@@ -720,7 +720,9 @@ fun ZeroButton(
 
                     // If a value has been set after the operator was clicked
                     if (state.isValueSetAfterOperator) {
-                        event(Event.AppendValue("0")) // Append the new number to the existing value
+                        if(state.value != "0") {
+                            event(Event.AppendValue("0")) // Append the new number to the existing value
+                        }
                     }
 
                     // If a value is not been added
