@@ -1,5 +1,7 @@
 package com.piyushjt.icalc
 
+import androidx.compose.ui.unit.Dp
+
 sealed interface Event {
 
     // Modifying values
@@ -12,6 +14,8 @@ sealed interface Event {
     data class SetEqualPressed(val isEqualPressed : Boolean) : Event
     data class SetDotPressed(val isPressed: Boolean) : Event
     data class SetValueSetAfterOperator(val isSet: Boolean) : Event
+
+    data class SetStatusBarSize(val size: Dp) : Event
 
     // Clearing values
     object ClearAll : Event

@@ -1,23 +1,33 @@
 package com.piyushjt.icalc
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -37,44 +48,150 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.piyushjt.icalc.ui.theme.Background
 import com.piyushjt.icalc.ui.theme.NumBtnColor
-import com.piyushjt.icalc.ui.theme.OnNum
-import com.piyushjt.icalc.ui.theme.OnOrange
 import com.piyushjt.icalc.ui.theme.OnTopBtn
 import com.piyushjt.icalc.ui.theme.OrangeBtnColor
-import com.piyushjt.icalc.ui.theme.TextColor
+import com.piyushjt.icalc.ui.theme.SciBtnColor
 import com.piyushjt.icalc.ui.theme.TopBtnColor
 import com.piyushjt.icalc.ui.theme.Transparent
+import com.piyushjt.icalc.ui.theme.White
 import kotlinx.coroutines.coroutineScope
+
 
 class MainActivity : ComponentActivity() {
 
     // View Model (MVVM)
     private val viewModel: ViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        // Setting status bar & navigation bar colors
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.isAppearanceLightStatusBars = false
+        Background.toArgb().also { window.navigationBarColor = it }
+
+
         setContent {
 
             // State
             val state by viewModel.state.collectAsState()
 
-            // Vertical Screen
-            VerticalScreen(
-                state = state,
-                event = viewModel::event
-            )
+            val configuration = LocalConfiguration.current
+            val aspectRatio = configuration.screenWidthDp / configuration.screenHeightDp
+
+
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
+
+            if(aspectRatio <= 0.8) {
+
+                // Vertical Screen
+                VerticalScreen(
+                    state = state,
+                    event = viewModel::event
+                )
+            }
+            else {
+                val systemUiController = rememberSystemUiController()
+
+                // Hide the status bar
+                systemUiController.isStatusBarVisible = false
+
+                // Horizontal Screen
+                HorizontalScreen(
+                    state = state,
+                    event = viewModel::event
+                )
+            }
         }
     }
 }
 
 
+@Preview(
+    showSystemUi = true
+)
+@Composable
+private fun Screen() {
+    val configuration = LocalConfiguration.current
+    val aspectRatio = configuration.screenWidthDp / configuration.screenHeightDp
+
+    // View Model (MVVM)
+    val viewModel = ViewModel()
+    val state by viewModel.state.collectAsState()
 
 
+    if(aspectRatio < 0.8) {
+
+        // Vertical Screen
+        VerticalScreen(
+            state = state,
+            event = viewModel::event
+        )
+    }
+    else {
+        // Horizontal Screen
+        HorizontalScreen(
+            state = state,
+            event = viewModel::event
+        )
+    }
+}
+
+// Horizontal Screen
+@Composable
+fun HorizontalScreen(
+    state: State,
+    event: (Event) -> Unit
+) {
+
+    Log.d("Height", LocalConfiguration.current.screenHeightDp.toString())
+    Log.d("Width", LocalConfiguration.current.screenWidthDp.toString())
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Background)
+            .padding(
+                bottom = WindowInsets.navigationBars
+                    .asPaddingValues()
+                    .calculateBottomPadding(),
+                start = state.statusBarSize,
+                end = WindowInsets.navigationBars.asPaddingValues().calculateEndPadding(
+                    LayoutDirection.Ltr
+                )
+            ),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+
+        // Value text view
+        TextValue(
+            state = state,
+            event = event,
+            height = (0.15 * (LocalConfiguration.current.screenHeightDp)).dp,
+            textSize = null
+        )
+
+        // Buttons in grid layout
+        HorizontalButtons(event = event, state = state)
+    }
+}
 
 // Vertical Screen
 @Composable
@@ -82,18 +199,28 @@ fun VerticalScreen(
     state: State,
     event: (Event) -> Unit
 ) {
+
+    event(Event.SetStatusBarSize(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(
+                bottom = WindowInsets
+                    .navigationBars
+                    .asPaddingValues()
+                    .calculateBottomPadding()
+            )
             .background(Background),
         verticalArrangement = Arrangement.Bottom
     ) {
 
         // Value text view
         TextValue(
-            text = state.valueToShow,
             state = state,
-            event = event
+            event = event,
+            height = (0.15 * (LocalConfiguration.current.screenHeightDp)).dp,
+            textSize = state.textSize
         )
 
         // Buttons in grid layout
@@ -105,9 +232,10 @@ fun VerticalScreen(
 // Value Text View
 @Composable
 fun TextValue(
-    text: String,
     state: State,
-    event: (Event) -> Unit
+    event: (Event) -> Unit,
+    height: Dp,
+    textSize: Int?
 ) {
     // State of event trigger
     var isEventTriggered = remember { mutableStateOf(false) }
@@ -115,9 +243,13 @@ fun TextValue(
     // Container for text value
     Box(
         modifier = Modifier
+            .padding(
+                start = 20.dp, end = 20.dp,
+                bottom = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp
+            )
             .fillMaxWidth()
             .background(Background)
-            .padding(horizontal = 20.dp, vertical = 20.dp)
+            .height(height)
 
             // Swipe Listener
             .pointerInput(Unit) {
@@ -143,12 +275,14 @@ fun TextValue(
         contentAlignment = Alignment.BottomEnd
     ) {
 
-        val textToShow = if (text.contains('e')) {
+        val textToShow = if (state.valueToShow.contains('e')) {
 
-            "${text.substring(0, text.indexOf('e') + 1).replace("e", "x10")}${(text.substringAfter('e'))}"
+            "${state.valueToShow
+                .substring(0, state.valueToShow.indexOf('e') + 1)
+                .replace("e", "x10")}${(state.value.substringAfter('e'))}"
 
         } else {
-            text
+            state.valueToShow
         }
 
 
@@ -174,20 +308,147 @@ fun TextValue(
                     append(textToShow)
                 }
             },
-            color = TextColor,
+            color = White,
             fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontSize = state.textSize.sp
+            fontSize = (textSize?: 28).sp
         )
     }
 }
 
 
-// Buttons in grid format
+// Buttons in grid format for horizontal screen
+@Composable
+fun HorizontalButtons(
+    event: (Event) -> Unit,
+    state: State
+) {
+    val height = (0.15 * (LocalConfiguration.current.screenHeightDp)).dp
+    val width = (0.08 * (LocalConfiguration.current.screenWidthDp)).dp
+    val widthForZero = (0.18 * (LocalConfiguration.current.screenWidthDp)).dp
+    Column(
+        modifier = Modifier
+            .padding(bottom = (0.0285 * (LocalConfiguration.current.screenHeightDp)).dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            // Showing text in buttons as needed
+            ScientificButton(event = event, text = "(", height = height, width = width)
+            ScientificButton(event = event, text = ")", height = height, width = width)
+            ScientificButton(event = event, text = "mc", height = height, width = width)
+            ScientificButton(event = event, text = "m+", height = height, width = width)
+            ScientificButton(event = event, text = "m-", height = height, width = width)
+            ScientificButton(event = event, text = "mr", height = height, width = width)
+
+            OtherButton(event = event, text = if (state.value != "0") "C" else "AC", height = height, width = width, textSize = 18)
+
+            OtherButton(event = event, text = "+/-", height = height, width = width, textSize = 18)
+            OtherButton(event = event, text = "%", height = height, width = width, textSize = 18)
+            OppButton(state = state, event = event, text = "÷", height = height, width = width, textSize = 24)
+        }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            // Showing text in buttons as needed
+            ScientificButton(event = event, text = "2nd", height = height, width = width)
+            ScientificButton(event = event, text = "x2", height = height, width = width)
+            ScientificButton(event = event, text = "x3", height = height, width = width)
+            ScientificButton(event = event, text = "xy", height = height, width = width)
+            ScientificButton(event = event, text = "ex", height = height, width = width)
+            ScientificButton(event = event, text = "10x", height = height, width = width)
+
+            NumButton(state = state, event = event, text = "7", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "8", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "9", height = height, width = width, textSize = 24)
+            OppButton(state = state, event = event, text = "×", height = height, width = width, textSize = 24)
+        }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            // Showing text in buttons as needed
+            ScientificButton(event = event, text = "1/x", height = height, width = width)
+            ScientificButton(event = event, text = "2rtx", height = height, width = width)
+            ScientificButton(event = event, text = "3rtx", height = height, width = width)
+            ScientificButton(event = event, text = "yrtx", height = height, width = width)
+            ScientificButton(event = event, text = "ln", height = height, width = width)
+            ScientificButton(event = event, text = "log10", height = height, width = width)
+
+            NumButton(state = state, event = event, text = "4", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "5", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "6", height = height, width = width, textSize = 24)
+            OppButton(state = state, event = event, text = "-", height = height, width = width, textSize = 24)
+        }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            // Showing text in buttons as needed
+            ScientificButton(event = event, text = "x!", height = height, width = width)
+            ScientificButton(event = event, text = "sin", height = height, width = width)
+            ScientificButton(event = event, text = "cos", height = height, width = width)
+            ScientificButton(event = event, text = "tan", height = height, width = width)
+            ScientificButton(event = event, text = "e", height = height, width = width)
+            ScientificButton(event = event, text = "EE", height = height, width = width)
+
+            NumButton(state = state, event = event, text = "1", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "2", height = height, width = width, textSize = 24)
+            NumButton(state = state, event = event, text = "3", height = height, width = width, textSize = 24)
+            OppButton(state = state, event = event, text = "+", height = height, width = width, textSize = 24)
+        }
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = (0.0142 * (LocalConfiguration.current.screenHeightDp)).dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            // Showing text in buttons as needed
+            ScientificButton(event = event, text = "Rad", height = height, width = width)
+            ScientificButton(event = event, text = "sinh", height = height, width = width)
+            ScientificButton(event = event, text = "cosh", height = height, width = width)
+            ScientificButton(event = event, text = "tanh", height = height, width = width)
+            ScientificButton(event = event, text = "π", height = height, width = width)
+            ScientificButton(event = event, text = "Rand", height = height, width = width)
+
+            ZeroButton(state = state, event = event, height = height, width = widthForZero, textSize = 24)
+            DotButton(state = state, event = event, height = height, width = width)
+            OppButton(state = state, event = event, text = "=", height = height, width = width, textSize = 24)
+        }
+
+
+    }
+}
+
+
+// Buttons in grid format for vertical screen
 @Composable
 fun VerticalButtons(
     event: (Event) -> Unit,
     state: State
 ) {
+    val heightWidth = (0.21 * (LocalConfiguration.current.screenWidthDp)).dp
+    val widthForZero = (0.452 * (LocalConfiguration.current.screenWidthDp)).dp
     Column(
         modifier = Modifier
             .padding(bottom = 16.dp),
@@ -202,11 +463,11 @@ fun VerticalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            OtherButton(event = event, text = if (state.value != "0") "C" else "AC")
+            OtherButton(event = event, text = if (state.value != "0") "C" else "AC", height = heightWidth, width = heightWidth, textSize = 24)
 
-            OtherButton(event = event, text = "+/-")
-            OtherButton(event = event, text = "%")
-            OppButton(state = state, event = event, text = "÷")
+            OtherButton(event = event, text = "+/-", height = heightWidth, width = heightWidth, textSize = 24)
+            OtherButton(event = event, text = "%", height = heightWidth, width = heightWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "÷", height = heightWidth, width = heightWidth, textSize = 30)
         }
 
         Row (
@@ -217,10 +478,10 @@ fun VerticalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            NumButton(state = state, event = event, text = "7")
-            NumButton(state = state, event = event, text = "8")
-            NumButton(state = state, event = event, text = "9")
-            OppButton(state = state, event = event, text = "×")
+            NumButton(state = state, event = event, text = "7", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "8", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "9", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "×", height = heightWidth, width = heightWidth, textSize = 30)
         }
 
         Row (
@@ -231,10 +492,10 @@ fun VerticalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            NumButton(state = state, event = event, text = "4")
-            NumButton(state = state, event = event, text = "5")
-            NumButton(state = state, event = event, text = "6")
-            OppButton(state = state, event = event, text = "-")
+            NumButton(state = state, event = event, text = "4", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "5", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "6", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "-", height = heightWidth, width = heightWidth, textSize = 30)
         }
 
         Row (
@@ -245,10 +506,10 @@ fun VerticalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            NumButton(state = state, event = event, text = "1")
-            NumButton(state = state, event = event, text = "2")
-            NumButton(state = state, event = event, text = "3")
-            OppButton(state = state, event = event, text = "+")
+            NumButton(state = state, event = event, text = "1", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "2", height = heightWidth, width = heightWidth, textSize = 30)
+            NumButton(state = state, event = event, text = "3", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "+", height = heightWidth, width = heightWidth, textSize = 30)
         }
 
         Row (
@@ -259,9 +520,9 @@ fun VerticalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ZeroButton(state = state, event = event)
-            DotButton(state = state, event = event,)
-            OppButton(state = state, event = event, text = "=")
+            ZeroButton(state = state, event = event, height = heightWidth, width = widthForZero, textSize = 30)
+            DotButton(state = state, event = event, height = heightWidth, width = heightWidth)
+            OppButton(state = state, event = event, text = "=", height = heightWidth, width = heightWidth, textSize = 30)
         }
 
 
@@ -269,11 +530,14 @@ fun VerticalButtons(
 }
 
 
+
 // Dot Button
 @Composable
 fun DotButton(
     event: (Event) -> Unit,
-    state: State
+    state: State,
+    height : Dp,
+    width : Dp
 ) {
     Button(
         onClick = {
@@ -314,13 +578,13 @@ fun DotButton(
         modifier= Modifier
             .background(Transparent)
             .clip(RoundedCornerShape(50.dp))
-            .width((0.21 * (LocalConfiguration.current.screenWidthDp)).dp)
-            .aspectRatio(1f),
+            .width(width)
+            .height(height),
         colors = ButtonDefaults.buttonColors(containerColor = NumBtnColor)
     ) {
         Text(
             text = ".",
-            color = OnNum,
+            color = White,
             fontSize = 32.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
@@ -334,9 +598,12 @@ fun DotButton(
 fun NumButton(
     event: (Event) -> Unit,
     text : String,
-    state: State
+    state: State,
+    height : Dp,
+    width : Dp,
+    textSize : Int
 ) {
-    Button(
+    TextButton(
         onClick = {
 
             // If equal button was pressed just before clicking on a number
@@ -399,14 +666,14 @@ fun NumButton(
         modifier= Modifier
             .background(Transparent)
             .clip(RoundedCornerShape(50.dp))
-            .width((0.21 * (LocalConfiguration.current.screenWidthDp)).dp)
-            .aspectRatio(1f),
+            .width(width)
+            .height(height),
         colors = ButtonDefaults.buttonColors(containerColor = NumBtnColor)
     ) {
         Text(
             text = text,
-            color = OnNum,
-            fontSize = 32.sp,
+            color = White,
+            fontSize = textSize.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
         )
@@ -418,7 +685,10 @@ fun NumButton(
 @Composable
 fun ZeroButton(
     state: State,
-    event: (Event) -> Unit
+    event: (Event) -> Unit,
+    height : Dp,
+    width : Dp,
+    textSize : Int
 ) {
     Button(
         onClick = {
@@ -470,21 +740,27 @@ fun ZeroButton(
         modifier = Modifier
             .background(Color.Transparent)
             .clip(RoundedCornerShape(50.dp))
-            .width((0.452 * (LocalConfiguration.current.screenWidthDp)).dp)
-            .aspectRatio(2.15238f),
+            .width(width)
+            .height(height),
         colors = ButtonDefaults.buttonColors(containerColor = NumBtnColor)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = (0.02 * (LocalConfiguration.current.screenWidthDp)).dp),
+                .padding(
+                    start =
+                    if (textSize == 24)
+                        (0.007 * (LocalConfiguration.current.screenWidthDp)).dp
+                    else
+                        (0.02 * (LocalConfiguration.current.screenWidthDp)).dp
+                ),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "0",
-                color = OnNum,
-                fontSize = 32.sp,
+                color = White,
+                fontSize = textSize.sp,
                 fontFamily = FontFamily(Font(R.font.inter_light)),
                 fontWeight = FontWeight.Bold
             )
@@ -498,9 +774,12 @@ fun ZeroButton(
 fun OppButton(
     event: (Event) -> Unit,
     text : String,
-    state: State
+    state: State,
+    height : Dp,
+    width : Dp,
+    textSize : Int
 ) {
-    Button(
+    TextButton(
         onClick = {
 
             event(Event.SetDotPressed(false))
@@ -570,16 +849,16 @@ fun OppButton(
         modifier= Modifier
             .background(Transparent)
             .clip(RoundedCornerShape(50.dp))
-            .width((0.21 * (LocalConfiguration.current.screenWidthDp)).dp)
-            .aspectRatio(1f),
+            .width(width)
+            .height(height),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (state.buttonClickedForColor == text) OnOrange else OrangeBtnColor
+            containerColor = if (state.buttonClickedForColor == text) White else OrangeBtnColor
         )
     ) {
         Text(
             text = text,
-            color = if (state.buttonClickedForColor == text) OrangeBtnColor else OnOrange,
-            fontSize = 42.sp,
+            color = if (state.buttonClickedForColor == text) OrangeBtnColor else White,
+            fontSize = textSize.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
         )
@@ -591,9 +870,12 @@ fun OppButton(
 @Composable
 fun OtherButton(
     event: (Event) -> Unit,
-    text : String
+    text : String,
+    height : Dp,
+    width : Dp,
+    textSize : Int
 ) {
-    Button(
+    TextButton(
         onClick = {
 
             when(text) {
@@ -612,14 +894,42 @@ fun OtherButton(
         modifier= Modifier
             .background(Transparent)
             .clip(RoundedCornerShape(50.dp))
-            .width((0.21 * (LocalConfiguration.current.screenWidthDp)).dp)
-            .aspectRatio(1f),
+            .width(width)
+            .height(height),
         colors = ButtonDefaults.buttonColors(containerColor = TopBtnColor)
     ) {
         Text(
             text = text,
             color = OnTopBtn,
-            fontSize = 18.sp,
+            fontSize = textSize.sp,
+            fontFamily = FontFamily(Font(R.font.inter_light)),
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+// Scientific buttons
+@Composable
+fun ScientificButton(
+    event: (Event) -> Unit,
+    text : String,
+    height : Dp,
+    width : Dp
+) {
+    TextButton(
+        onClick = {  },
+        modifier= Modifier
+            .background(Transparent)
+            .clip(RoundedCornerShape(50.dp))
+            .width(width)
+            .height(height),
+        colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
+    ) {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            color = White,
+            fontSize = 14.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
         )

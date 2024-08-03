@@ -187,6 +187,17 @@ class ViewModel : ViewModel() {
                 }
             }
 
+
+            // Set Status bar size
+            is Event.SetStatusBarSize -> {
+                _state.update {
+                    it.copy(
+                        statusBarSize = event.size
+                    )
+                }
+                Log.d("Status bar size", state.value.statusBarSize.toString())
+            }
+
             // Clear All
             Event.ClearAll -> {
                 _state.update {

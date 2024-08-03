@@ -1,4 +1,4 @@
-# Icalc - IOS UI
+# I Calc - IOS UI Calculator
 
 This is a Calculator for android smartphones which mimics IOS calculator's UI
 
@@ -7,6 +7,7 @@ This is a Calculator for android smartphones which mimics IOS calculator's UI
 
 - Open Source
 - Swipe to Delete
+- Scientific Notations
 - Cool UI
 
 
