@@ -177,7 +177,7 @@ fun TextValue(
             },
             color = White,
             fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontSize = (textSize?: 28).sp
+            fontSize = (textSize?: 32).sp
         )
     }
 }

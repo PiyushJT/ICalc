@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -424,22 +429,50 @@ fun ScientificButton(
     height : Dp,
     width : Dp
 ) {
-    TextButton(
-        onClick = { },
-        modifier = Modifier
-            .background(Transparent)
-            .clip(RoundedCornerShape(50.dp))
-            .width(width)
-            .height(height),
-        colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
-    ) {
-        Text(
-            text = text,
-            textAlign = TextAlign.Center,
-            color = White,
-            fontSize = 14.sp,
-            fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontWeight = FontWeight.Bold
-        )
+    val icon = mapOf(
+        "sqrt" to R.drawable.square_root,
+        "cbrt" to R.drawable.cube_root,
+        "ythrt" to R.drawable.yth_root
+    )
+
+    if (text in icon.keys.toList()) {
+
+        IconButton(
+            onClick = { },
+            modifier = Modifier
+                .background(Transparent)
+                .clip(RoundedCornerShape(50.dp))
+                .width(width)
+                .height(height),
+            colors = IconButtonDefaults.iconButtonColors(containerColor = SciBtnColor)
+        ) {
+            Icon(
+                painter = painterResource(id = icon[text]?: R.drawable.square_root),
+                contentDescription = "Root",
+                modifier = Modifier
+                    .size(height/3),
+                tint = Color.White
+            )
+        }
+
+    } else {
+        TextButton(
+            onClick = { },
+            modifier = Modifier
+                .background(Transparent)
+                .clip(RoundedCornerShape(50.dp))
+                .width(width)
+                .height(height),
+            colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                color = White,
+                fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.inter_light)),
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

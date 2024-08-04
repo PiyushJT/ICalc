@@ -20,7 +20,7 @@ fun HorizontalButtons(
     screenHeight: Int,
     screenWidth: Int
 ) {
-    val buttonHeight = (0.15 * screenHeight).dp
+    val buttonHeight = (0.17 * screenHeight).dp
     val buttonWidth = (0.086 * screenWidth).dp
     val zeroButtonWidth = (0.18 * screenWidth).dp
 
@@ -60,12 +60,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "2nd", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "x2", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "x3", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "xy", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "ex", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "10x", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "2ⁿᵈ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "x²", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "x³", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "xʸ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "eˣ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "10ˣ", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "7", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "8", height = buttonHeight, width = buttonWidth, textSize = 24)
@@ -81,12 +81,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "1/x", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "2rtx", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "3rtx", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "yrtx", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "¹⁄ₓ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "sqrt", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "cbrt", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "ythrt", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, text = "ln", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "log10", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "log₁₀", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "4", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "5", height = buttonHeight, width = buttonWidth, textSize = 24)
