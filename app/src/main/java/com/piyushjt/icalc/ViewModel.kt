@@ -359,6 +359,7 @@ class ViewModel : ViewModel() {
             Event.SetReciprocal -> {
 
                 event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(false))
 
                 val reciprocal = (1 / state.value.value.toDouble()).toString()
 
@@ -366,6 +367,25 @@ class ViewModel : ViewModel() {
 
                 Log.d("Set reciprocal", state.value.value)
             }
+
+            Event.SetFactorial -> {
+
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(false))
+
+                var factorial = 1.0
+
+                for (i in 1..state.value.value.toDouble().toInt()){
+                    factorial *= i
+                }
+
+                // TODO : Add functionality for non integers later after learning
+
+                event(Event.SetValue(factorial.toString()))
+
+                Log.d("Set factorial", state.value.value)
+            }
+
 
         }
 
@@ -411,8 +431,8 @@ private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
     }
 
     // Returning value as per conditions
-    return if (value  in listOf("infinity", "nan")) {
-        value
+    return if (value  in listOf("error", "infinity", "nan")) {
+        "Error"
     }
     else {
         if (fractionalPart.isNotEmpty() || isDotPressed) "$formatted.$fractionalPart" else formatted

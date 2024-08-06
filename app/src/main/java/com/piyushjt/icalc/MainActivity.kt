@@ -111,8 +111,7 @@ fun TextValue(
     // Container for text value
     Box(
         modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 5.dp)
+            .padding(horizontal = 20.dp, vertical = 8.dp)
             .fillMaxWidth()
             .background(Background)
             .height(height)
@@ -138,7 +137,7 @@ fun TextValue(
                     }
                 }
             },
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.CenterEnd
     ) {
 
         val textToShow = if (state.valueToShow.contains('e')) {

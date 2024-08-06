@@ -3,6 +3,7 @@ package com.piyushjt.icalc
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -26,7 +27,8 @@ fun HorizontalButtons(
 
     Column(
         modifier = Modifier
-            .padding(bottom = (0.01 * screenHeight).dp),
+            .padding(bottom = (0.01 * screenHeight).dp)
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -38,12 +40,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "(", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = ")", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "mc", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "m+", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "m-", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "mr", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "(", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = ")", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "mc", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "m+", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "m-", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "mr", height = buttonHeight, width = buttonWidth)
 
             OtherButton(event = event, text = if (state.value != "0") "C" else "AC", height = buttonHeight, width = buttonWidth, textSize = 18)
 
@@ -60,12 +62,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "2ⁿᵈ", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "x²", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "x³", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "xʸ", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "eˣ", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "10ˣ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "2ⁿᵈ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "x²", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "x³", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "xʸ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "eˣ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "10ˣ", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "7", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "8", height = buttonHeight, width = buttonWidth, textSize = 24)
@@ -81,12 +83,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "¹⁄ₓ", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "!", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "\"", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "'", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "ln", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "log₁₀", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "¹⁄ₓ", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "!", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "\"", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "'", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "ln", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "log₁₀", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "4", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "5", height = buttonHeight, width = buttonWidth, textSize = 24)
@@ -102,12 +104,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "x!", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "sin", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "cos", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "tan", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "e", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "EE", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "x!", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "sin", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "cos", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "tan", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "e", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "EE", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "1", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "2", height = buttonHeight, width = buttonWidth, textSize = 24)
@@ -123,12 +125,12 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, text = "Rad", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "sinh", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "cosh", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "tanh", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "π", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "Rand", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "Rad", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "sinh", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "cosh", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "tanh", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "π", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "Rand", height = buttonHeight, width = buttonWidth)
 
             ZeroButton(state = state, event = event, height = buttonHeight, width = zeroButtonWidth, textSize = 24)
             DotButton(state = state, event = event, height = buttonHeight, width = buttonWidth, textSize = 24)

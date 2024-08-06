@@ -32,5 +32,6 @@ sealed interface Event {
 
     // Scientific Operations
     object SetReciprocal : Event
+    object SetFactorial : Event
 
 }

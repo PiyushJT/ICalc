@@ -33,6 +33,8 @@ import com.piyushjt.icalc.ui.theme.SciBtnColor
 import com.piyushjt.icalc.ui.theme.TopBtnColor
 import com.piyushjt.icalc.ui.theme.Transparent
 import com.piyushjt.icalc.ui.theme.White
+import kotlin.math.PI
+import kotlin.math.pow
 
 
 // Dot Button
@@ -420,6 +422,7 @@ fun OtherButton(
 @Composable
 fun ScientificButton(
     event: (Event) -> Unit,
+    state: State,
     text : String,
     height : Dp,
     width : Dp
@@ -427,9 +430,27 @@ fun ScientificButton(
     TextButton(
 
         onClick = {
-            if(text == "¹⁄ₓ") {
-                event(Event.SetReciprocal)
+
+            when(text) {
+
+                "¹⁄ₓ" -> event(Event.SetReciprocal)
+
+                "x!" -> event(Event.SetFactorial)
+
+                "π" -> event(Event.SetValue(PI.toString()))
+
+                "e" -> event(Event.SetValue(kotlin.math.E.toString()))
+
+                "x²" -> event(Event.SetValue(state.value.toDouble().pow(2.0).toString()))
+
+                "x³" -> event(Event.SetValue(state.value.toDouble().pow(3.0).toString()))
+
+                "eˣ" -> event(Event.SetValue(kotlin.math.E.pow(state.value.toDouble()).toString()))
+
+                "10ˣ" -> event(Event.SetValue(10.0.pow(state.value.toDouble()).toString()))
+
             }
+
         },
 
         modifier = Modifier
