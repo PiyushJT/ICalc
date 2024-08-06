@@ -54,7 +54,7 @@ fun HorizontalScreen(
         TextValue(
             state = state,
             event = event,
-            height = (0.18 * screenHeight).dp,
+            height = (0.15 * screenHeight).dp,
             textSize = null
         )
 

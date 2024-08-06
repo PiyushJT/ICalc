@@ -356,6 +356,17 @@ class ViewModel : ViewModel() {
                 Log.d("Change sign", state.value.value)
             }
 
+            Event.SetReciprocal -> {
+
+                event(Event.SetDotPressed(false))
+
+                val reciprocal = (1 / state.value.value.toDouble()).toString()
+
+                event(Event.SetValue(reciprocal))
+
+                Log.d("Set reciprocal", state.value.value)
+            }
+
         }
 
     }

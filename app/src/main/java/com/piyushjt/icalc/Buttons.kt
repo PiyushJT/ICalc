@@ -7,14 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -429,50 +424,33 @@ fun ScientificButton(
     height : Dp,
     width : Dp
 ) {
-    val icon = mapOf(
-        "sqrt" to R.drawable.square_root,
-        "cbrt" to R.drawable.cube_root,
-        "ythrt" to R.drawable.yth_root
-    )
+    TextButton(
 
-    if (text in icon.keys.toList()) {
+        onClick = {
+            if(text == "¹⁄ₓ") {
+                event(Event.SetReciprocal)
+            }
+        },
 
-        IconButton(
-            onClick = { },
-            modifier = Modifier
-                .background(Transparent)
-                .clip(RoundedCornerShape(50.dp))
-                .width(width)
-                .height(height),
-            colors = IconButtonDefaults.iconButtonColors(containerColor = SciBtnColor)
-        ) {
-            Icon(
-                painter = painterResource(id = icon[text]?: R.drawable.square_root),
-                contentDescription = "Root",
-                modifier = Modifier
-                    .size(height/3),
-                tint = Color.White
-            )
-        }
+        modifier = Modifier
+            .background(Transparent)
+            .clip(RoundedCornerShape(50.dp))
+            .width(width)
+            .height(height),
+        colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
+    ) {
 
-    } else {
-        TextButton(
-            onClick = { },
-            modifier = Modifier
-                .background(Transparent)
-                .clip(RoundedCornerShape(50.dp))
-                .width(width)
-                .height(height),
-            colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
-        ) {
-            Text(
-                text = text,
-                textAlign = TextAlign.Center,
-                color = White,
-                fontSize = 14.sp,
-                fontFamily = FontFamily(Font(R.font.inter_light)),
-                fontWeight = FontWeight.Bold
-            )
-        }
+        val isRootButton = text in listOf("!", "\"", "'")
+
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            color = White,
+
+            // Changing font if it is a root button
+            fontSize = if (isRootButton) 24.sp else 14.sp,
+            fontFamily = if (isRootButton) FontFamily(Font(R.font.roots_logos_as_font)) else FontFamily(Font(R.font.inter_light)),
+            fontWeight = if (isRootButton) FontWeight.Light else FontWeight.Bold
+        )
     }
 }

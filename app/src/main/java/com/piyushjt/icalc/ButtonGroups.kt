@@ -20,9 +20,9 @@ fun HorizontalButtons(
     screenHeight: Int,
     screenWidth: Int
 ) {
-    val buttonHeight = (0.17 * screenHeight).dp
+    val buttonHeight = (0.16 * screenHeight).dp
     val buttonWidth = (0.086 * screenWidth).dp
-    val zeroButtonWidth = (0.18 * screenWidth).dp
+    val zeroButtonWidth = ((2 * buttonWidth.value) + ((screenWidth - (10 * buttonWidth.value)) / 11)).dp
 
     Column(
         modifier = Modifier
@@ -82,9 +82,9 @@ fun HorizontalButtons(
         ){
             // Showing text in buttons as needed
             ScientificButton(event = event, text = "¹⁄ₓ", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "sqrt", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "cbrt", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, text = "ythrt", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "!", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "\"", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, text = "'", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, text = "ln", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, text = "log₁₀", height = buttonHeight, width = buttonWidth)
 

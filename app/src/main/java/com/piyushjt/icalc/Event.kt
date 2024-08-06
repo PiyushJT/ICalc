@@ -29,4 +29,8 @@ sealed interface Event {
 
     object ChangeSignOfValue : Event
 
+
+    // Scientific Operations
+    object SetReciprocal : Event
+
 }

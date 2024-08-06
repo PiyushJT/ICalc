@@ -111,9 +111,8 @@ fun TextValue(
     // Container for text value
     Box(
         modifier = Modifier
-            .padding(
-                horizontal = 20.dp
-            )
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 5.dp)
             .fillMaxWidth()
             .background(Background)
             .height(height)
@@ -164,7 +163,7 @@ fun TextValue(
 
                     withStyle(
                         style = SpanStyle(
-                            fontSize = if(textSize == null) 14.sp else 24.sp,
+                            fontSize = if(textSize == null) 20.sp else 24.sp,
                             baselineShift = BaselineShift.Superscript
                         )
                     ) {
@@ -177,7 +176,7 @@ fun TextValue(
             },
             color = White,
             fontFamily = FontFamily(Font(R.font.inter_light)),
-            fontSize = (textSize?: 32).sp
+            fontSize = (textSize?: 42).sp
         )
     }
 }

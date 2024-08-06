@@ -5,8 +5,9 @@ This is a Calculator for android smartphones which mimics IOS calculator's UI
 
 ## Features
 
-- Open Source
+- Free and Open Source
 - Swipe to Delete
+- Scientific Calculations
 - Scientific Notations
 - Cool UI
 
@@ -18,7 +19,7 @@ This is a Calculator for android smartphones which mimics IOS calculator's UI
 
 # Download
 
-[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_15.apk)
+[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_22.apk)
 
 
 ## Authors
