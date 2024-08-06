@@ -33,8 +33,8 @@ import com.piyushjt.icalc.ui.theme.SciBtnColor
 import com.piyushjt.icalc.ui.theme.TopBtnColor
 import com.piyushjt.icalc.ui.theme.Transparent
 import com.piyushjt.icalc.ui.theme.White
+import kotlin.math.E
 import kotlin.math.PI
-import kotlin.math.pow
 
 
 // Dot Button
@@ -431,6 +431,8 @@ fun ScientificButton(
 
         onClick = {
 
+            val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh")
+
             when(text) {
 
                 "¹⁄ₓ" -> event(Event.SetReciprocal)
@@ -439,16 +441,29 @@ fun ScientificButton(
 
                 "π" -> event(Event.SetValue(PI.toString()))
 
-                "e" -> event(Event.SetValue(kotlin.math.E.toString()))
+                "e" -> event(Event.SetValue(E.toString()))
 
-                "x²" -> event(Event.SetValue(state.value.toDouble().pow(2.0).toString()))
+                "x²" -> event(Event.SetPower(state.value.toDouble(), 2.0))
 
-                "x³" -> event(Event.SetValue(state.value.toDouble().pow(3.0).toString()))
+                "x³" -> event(Event.SetPower(state.value.toDouble(), 3.0))
 
-                "eˣ" -> event(Event.SetValue(kotlin.math.E.pow(state.value.toDouble()).toString()))
+                "eˣ" -> event(Event.SetPower(E, state.value.toDouble()))
 
-                "10ˣ" -> event(Event.SetValue(10.0.pow(state.value.toDouble()).toString()))
+                "10ˣ" -> event(Event.SetPower(10.0, state.value.toDouble()))
 
+                "2ˣ" -> event(Event.SetPower(2.0, state.value.toDouble()))
+
+                in trigs -> event(Event.SetTrig(text))
+
+                "!" -> event(Event.SetPower(state.value.toDouble(), 1/2.0))
+
+                "\"" -> event(Event.SetPower(state.value.toDouble(), 1/3.0))
+
+                "log₁₀" -> event(Event.SetLog(base = 10.0, value = state.value.toDouble()))
+
+               "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
+
+                "ln" -> event(Event.SetLog(base = E, value = state.value.toDouble()))
             }
 
         },

@@ -5,7 +5,15 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.cos
+import kotlin.math.cosh
+import kotlin.math.log
+import kotlin.math.pow
 import kotlin.math.sign
+import kotlin.math.sin
+import kotlin.math.sinh
+import kotlin.math.tan
+import kotlin.math.tanh
 
 class ViewModel : ViewModel() {
 
@@ -371,7 +379,7 @@ class ViewModel : ViewModel() {
             Event.SetFactorial -> {
 
                 event(Event.SetDotPressed(false))
-                event(Event.SetEqualPressed(false))
+                event(Event.SetEqualPressed(true))
 
                 var factorial = 1.0
 
@@ -384,6 +392,52 @@ class ViewModel : ViewModel() {
                 event(Event.SetValue(factorial.toString()))
 
                 Log.d("Set factorial", state.value.value)
+            }
+
+            is Event.SetPower -> {
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(true))
+
+                val power = event.value.pow(event.power)
+
+                event(Event.SetValue(power.toString()))
+
+                Log.d("Set power", state.value.value)
+
+            }
+
+            is Event.SetTrig -> {
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(true))
+
+                when(event.trig){
+
+                    "sin" -> event(Event.SetValue(sin(state.value.value.toDouble()).toString()))
+
+                    "cos" -> event(Event.SetValue(cos(state.value.value.toDouble()).toString()))
+
+                    "tan" -> event(Event.SetValue(tan(state.value.value.toDouble()).toString()))
+
+                    "sinh" -> event(Event.SetValue(sinh(state.value.value.toDouble()).toString()))
+
+                    "cosh" -> event(Event.SetValue(cosh(state.value.value.toDouble()).toString()))
+
+                    "tanh" -> event(Event.SetValue(tanh(state.value.value.toDouble()).toString()))
+
+                }
+
+                Log.d("Set trig", state.value.value)
+            }
+
+            is Event.SetLog -> {
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(true))
+
+                val logAns = log(event.value, event.base)
+
+                event(Event.SetValue(logAns.toString()))
+
+                Log.d("Set log", state.value.value)
             }
 
 

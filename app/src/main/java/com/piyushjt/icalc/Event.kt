@@ -34,4 +34,7 @@ sealed interface Event {
     object SetReciprocal : Event
     object SetFactorial : Event
 
+    data class SetPower(val value : Double, val power : Double) : Event
+    data class SetTrig(val trig : String) : Event
+    data class SetLog(val base : Double, val value : Double) : Event
 }
