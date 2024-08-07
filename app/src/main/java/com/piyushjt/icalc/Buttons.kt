@@ -27,12 +27,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.piyushjt.icalc.ui.theme.NumBtnColor
-import com.piyushjt.icalc.ui.theme.OnTopBtn
+import com.piyushjt.icalc.ui.theme.Black
 import com.piyushjt.icalc.ui.theme.OrangeBtnColor
 import com.piyushjt.icalc.ui.theme.SciBtnColor
+import com.piyushjt.icalc.ui.theme.SciBtnColorEnabled
 import com.piyushjt.icalc.ui.theme.TopBtnColor
 import com.piyushjt.icalc.ui.theme.Transparent
 import com.piyushjt.icalc.ui.theme.White
+import java.lang.Math.random
 import kotlin.math.E
 import kotlin.math.PI
 
@@ -409,7 +411,7 @@ fun OtherButton(
     ) {
         Text(
             text = text,
-            color = OnTopBtn,
+            color = Black,
             fontSize = textSize.sp,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontWeight = FontWeight.Bold
@@ -427,6 +429,9 @@ fun ScientificButton(
     height : Dp,
     width : Dp
 ) {
+
+    val isButtonEnabled = text == "mr" && state.memory != 0.0
+
     TextButton(
 
         onClick = {
@@ -464,6 +469,20 @@ fun ScientificButton(
                "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
 
                 "ln" -> event(Event.SetLog(base = E, value = state.value.toDouble()))
+
+                "Rand" -> event(Event.SetValue(random().toString()))
+
+
+                // Memory Keys
+                "mc" -> event(Event.MemoryClear)
+
+                "m+" -> event(Event.UpdateMemory(1, state.value.toDouble()))
+
+                "m-" -> event(Event.UpdateMemory(-1, state.value.toDouble()))
+
+                "mr" -> event(Event.MemoryRecall)
+
+
             }
 
         },
@@ -473,7 +492,7 @@ fun ScientificButton(
             .clip(RoundedCornerShape(50.dp))
             .width(width)
             .height(height),
-        colors = ButtonDefaults.buttonColors(containerColor = SciBtnColor)
+        colors = ButtonDefaults.buttonColors( containerColor = if (isButtonEnabled) SciBtnColorEnabled else SciBtnColor)
     ) {
 
         val isRootButton = text in listOf("!", "\"", "'")
@@ -481,7 +500,7 @@ fun ScientificButton(
         Text(
             text = text,
             textAlign = TextAlign.Center,
-            color = White,
+            color = if (isButtonEnabled) Black else White,
 
             // Changing font if it is a root button
             fontSize = if (isRootButton) 24.sp else 14.sp,

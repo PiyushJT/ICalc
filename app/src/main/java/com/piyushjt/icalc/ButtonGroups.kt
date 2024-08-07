@@ -51,7 +51,7 @@ fun HorizontalButtons(
 
             OtherButton(event = event, text = "+/-", height = buttonHeight, width = buttonWidth, textSize = 18)
             OtherButton(event = event, text = "%", height = buttonHeight, width = buttonWidth, textSize = 18)
-            OppButton(state = state, event = event, text = "÷", height = buttonHeight, width = buttonWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "÷", height = buttonHeight, width = buttonWidth, textSize = 28)
         }
 
         Row (
@@ -72,7 +72,7 @@ fun HorizontalButtons(
             NumButton(state = state, event = event, text = "7", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "8", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "9", height = buttonHeight, width = buttonWidth, textSize = 24)
-            OppButton(state = state, event = event, text = "×", height = buttonHeight, width = buttonWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "×", height = buttonHeight, width = buttonWidth, textSize = 28)
         }
 
         Row (
@@ -93,7 +93,7 @@ fun HorizontalButtons(
             NumButton(state = state, event = event, text = "4", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "5", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "6", height = buttonHeight, width = buttonWidth, textSize = 24)
-            OppButton(state = state, event = event, text = "-", height = buttonHeight, width = buttonWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "-", height = buttonHeight, width = buttonWidth, textSize = 28)
         }
 
         Row (
@@ -114,7 +114,7 @@ fun HorizontalButtons(
             NumButton(state = state, event = event, text = "1", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "2", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "3", height = buttonHeight, width = buttonWidth, textSize = 24)
-            OppButton(state = state, event = event, text = "+", height = buttonHeight, width = buttonWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "+", height = buttonHeight, width = buttonWidth, textSize = 28)
         }
 
         Row (
@@ -134,7 +134,7 @@ fun HorizontalButtons(
 
             ZeroButton(state = state, event = event, height = buttonHeight, width = zeroButtonWidth, textSize = 24)
             DotButton(state = state, event = event, height = buttonHeight, width = buttonWidth, textSize = 24)
-            OppButton(state = state, event = event, text = "=", height = buttonHeight, width = buttonWidth, textSize = 24)
+            OppButton(state = state, event = event, text = "=", height = buttonHeight, width = buttonWidth, textSize = 28)
         }
 
 
@@ -168,7 +168,7 @@ fun VerticalButtons(
 
             OtherButton(event = event, text = "+/-", height = heightWidth, width = heightWidth, textSize = 24)
             OtherButton(event = event, text = "%", height = heightWidth, width = heightWidth, textSize = 24)
-            OppButton(state = state, event = event, text = "÷", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "÷", height = heightWidth, width = heightWidth, textSize = 38)
         }
 
         Row (
@@ -182,7 +182,7 @@ fun VerticalButtons(
             NumButton(state = state, event = event, text = "7", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "8", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "9", height = heightWidth, width = heightWidth, textSize = 30)
-            OppButton(state = state, event = event, text = "×", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "×", height = heightWidth, width = heightWidth, textSize = 38)
         }
 
         Row (
@@ -196,7 +196,7 @@ fun VerticalButtons(
             NumButton(state = state, event = event, text = "4", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "5", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "6", height = heightWidth, width = heightWidth, textSize = 30)
-            OppButton(state = state, event = event, text = "-", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "-", height = heightWidth, width = heightWidth, textSize = 38)
         }
 
         Row (
@@ -210,7 +210,7 @@ fun VerticalButtons(
             NumButton(state = state, event = event, text = "1", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "2", height = heightWidth, width = heightWidth, textSize = 30)
             NumButton(state = state, event = event, text = "3", height = heightWidth, width = heightWidth, textSize = 30)
-            OppButton(state = state, event = event, text = "+", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "+", height = heightWidth, width = heightWidth, textSize = 38)
         }
 
         Row (
@@ -223,7 +223,7 @@ fun VerticalButtons(
             // Showing text in buttons as needed
             ZeroButton(state = state, event = event, height = heightWidth, width = widthForZero, textSize = 30)
             DotButton(state = state, event = event, height = heightWidth, width = heightWidth, textSize = 30)
-            OppButton(state = state, event = event, text = "=", height = heightWidth, width = heightWidth, textSize = 30)
+            OppButton(state = state, event = event, text = "=", height = heightWidth, width = heightWidth, textSize = 38)
         }
 
 

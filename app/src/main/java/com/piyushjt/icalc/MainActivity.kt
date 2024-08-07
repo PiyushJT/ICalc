@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.piyushjt.icalc.ui.theme.Background
+import com.piyushjt.icalc.ui.theme.Black
 import com.piyushjt.icalc.ui.theme.White
 import kotlinx.coroutines.coroutineScope
 
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         controller.isAppearanceLightStatusBars = false
-        Background.toArgb().also { window.navigationBarColor = it }
+        Black.toArgb().also { window.navigationBarColor = it }
 
 
         setContent {
@@ -113,7 +113,7 @@ fun TextValue(
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .background(Background)
+            .background(Black)
             .height(height)
 
             // Swipe Listener

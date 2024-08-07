@@ -37,4 +37,8 @@ sealed interface Event {
     data class SetPower(val value : Double, val power : Double) : Event
     data class SetTrig(val trig : String) : Event
     data class SetLog(val base : Double, val value : Double) : Event
+
+    data class UpdateMemory(val sign : Int, val value : Double) : Event
+    object MemoryClear : Event
+    object MemoryRecall : Event
 }

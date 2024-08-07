@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.piyushjt.icalc.ui.theme.Background
+import com.piyushjt.icalc.ui.theme.Black
 
 // Horizontal Screen
 @Composable
@@ -34,7 +34,7 @@ fun HorizontalScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(Black)
             .padding(
                 start = state.statusBarSize,
                 bottom = WindowInsets.navigationBars
@@ -84,7 +84,7 @@ fun VerticalScreen(
                     .asPaddingValues()
                     .calculateBottomPadding()
             )
-            .background(Background),
+            .background(Black),
         verticalArrangement = Arrangement.Bottom
     ) {
 

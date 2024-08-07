@@ -440,6 +440,43 @@ class ViewModel : ViewModel() {
                 Log.d("Set log", state.value.value)
             }
 
+            is Event.UpdateMemory -> {
+
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(true))
+
+                var memory = state.value.memory
+
+                memory += (event.sign)*(event.value)
+
+                _state.update {
+                    it.copy(
+                        memory = memory
+                    )
+                }
+
+                Log.d("Update memory", state.value.memory.toString())
+            }
+
+            Event.MemoryClear -> {
+                _state.update {
+                    it.copy(
+                        memory = 0.0
+                    )
+                }
+
+                Log.d("Clear memory", state.value.memory.toString())
+            }
+
+            Event.MemoryRecall -> {
+
+                event(Event.SetDotPressed(false))
+                event(Event.SetEqualPressed(true))
+
+                event(Event.SetValue(state.value.memory.toString()))
+
+                Log.d("Recall memory", state.value.memory.toString())
+            }
 
         }
 
