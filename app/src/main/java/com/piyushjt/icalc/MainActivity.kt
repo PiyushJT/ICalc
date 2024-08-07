@@ -9,10 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +34,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.piyushjt.icalc.ui.theme.Black
+import com.piyushjt.icalc.ui.theme.Transparent
 import com.piyushjt.icalc.ui.theme.White
 import kotlinx.coroutines.coroutineScope
 
@@ -109,7 +114,7 @@ fun TextValue(
     val isEventTriggered = remember { mutableStateOf(false) }
 
     // Container for text value
-    Box(
+    Row(
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 8.dp)
             .fillMaxWidth()
@@ -137,7 +142,8 @@ fun TextValue(
                     }
                 }
             },
-        contentAlignment = Alignment.CenterEnd
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
         val textToShow = if (state.valueToShow.contains('e')) {
@@ -150,6 +156,17 @@ fun TextValue(
             state.valueToShow
         }
 
+        if(textSize == null) {
+            Text(
+                text = if (state.angleUnitDeg) "Deg" else "Rad",
+                color = White,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+        }
+        else {
+            Box(modifier = Modifier.height(1.dp).width(1.dp).background(Transparent))
+        }
 
         // Text Value
         Text(
@@ -173,6 +190,7 @@ fun TextValue(
                     append(textToShow)
                 }
             },
+            textAlign = TextAlign.End,
             color = White,
             fontFamily = FontFamily(Font(R.font.inter_light)),
             fontSize = (textSize?: 42).sp

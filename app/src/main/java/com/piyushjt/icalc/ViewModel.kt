@@ -5,9 +5,14 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
 import kotlin.math.acos
+import kotlin.math.acosh
 import kotlin.math.asin
+import kotlin.math.asinh
 import kotlin.math.atan
+import kotlin.math.atanh
 import kotlin.math.cos
 import kotlin.math.cosh
 import kotlin.math.log
@@ -418,11 +423,53 @@ class ViewModel : ViewModel() {
 
                 when(event.trig){
 
-                    "sin" -> event(Event.SetValue(sin(state.value.value.toDouble()).toString()))
+                    "sin" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(sin(toRadians(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(sin(state.value.value.toDouble()).toString()))
+                        }
+                    }
 
-                    "cos" -> event(Event.SetValue(cos(state.value.value.toDouble()).toString()))
+                    "cos" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(cos(toRadians(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(cos(state.value.value.toDouble()).toString()))
+                        }
+                    }
 
-                    "tan" -> event(Event.SetValue(tan(state.value.value.toDouble()).toString()))
+                    "tan" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(tan(toRadians(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(tan(state.value.value.toDouble()).toString()))
+                        }
+                    }
+
+                    "sin⁻¹" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(toDegrees(asin(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(asin(state.value.value.toDouble()).toString()))
+                        }
+                    }
+
+                    "cos⁻¹" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(toDegrees(acos(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(acos(state.value.value.toDouble()).toString()))
+                        }
+                    }
+
+                    "tan⁻¹" -> {
+                        if(state.value.angleUnitDeg){
+                            event(Event.SetValue(toDegrees(atan(state.value.value.toDouble())).toString()))
+                        } else {
+                            event(Event.SetValue(atan(state.value.value.toDouble()).toString()))
+                        }
+                    }
 
                     "sinh" -> event(Event.SetValue(sinh(state.value.value.toDouble()).toString()))
 
@@ -430,11 +477,13 @@ class ViewModel : ViewModel() {
 
                     "tanh" -> event(Event.SetValue(tanh(state.value.value.toDouble()).toString()))
 
-                    "sin⁻¹" -> event(Event.SetValue(asin(state.value.value.toDouble()).toString()))
 
-                    "cos⁻¹" -> event(Event.SetValue(acos(state.value.value.toDouble()).toString()))
+                    "sinh⁻¹" -> event(Event.SetValue(asinh(state.value.value.toDouble()).toString()))
 
-                    "tan⁻¹" -> event(Event.SetValue(atan(state.value.value.toDouble()).toString()))
+                    "cosh⁻¹" -> event(Event.SetValue(acosh(state.value.value.toDouble()).toString()))
+
+                    "tanh⁻¹" -> event(Event.SetValue(atanh(state.value.value.toDouble()).toString()))
+
 
                 }
 
@@ -498,8 +547,20 @@ class ViewModel : ViewModel() {
                     )
                 }
 
-                Log.d("Set inverse visibility", state.value.isInverseVisible.toString())
+                Log.d("Toggle inverse visibility", state.value.isInverseVisible.toString())
             }
+
+            is Event.ToggleAngleUnitDeg -> {
+
+                _state.update {
+                    it.copy(
+                        angleUnitDeg = !state.value.angleUnitDeg
+                    )
+                }
+
+                Log.d("Toggle angle Unit", state.value.angleUnitDeg.toString())
+            }
+
 
         }
 

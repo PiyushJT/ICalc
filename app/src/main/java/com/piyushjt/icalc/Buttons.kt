@@ -444,6 +444,9 @@ fun ScientificButton(
     if(text in trigs.subList(0,6) && state.isInverseVisible){
         textToShow = "${text}⁻¹"
     }
+    else if ( text == "Unit"){
+        textToShow = if (state.angleUnitDeg) "Rad" else "Deg"
+    }
 
     TextButton(
 
@@ -477,7 +480,7 @@ fun ScientificButton(
 
                 "log₁₀" -> event(Event.SetLog(base = 10.0, value = state.value.toDouble()))
 
-               "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
+                "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
 
                 "Rand" -> event(Event.SetValue(random().toString()))
 
@@ -544,6 +547,8 @@ fun ScientificButton(
                     }
 
                 }
+
+                in listOf("Rad", "Deg") -> event(Event.ToggleAngleUnitDeg)
 
             }
 

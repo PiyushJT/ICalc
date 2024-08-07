@@ -15,5 +15,6 @@ data class State(
     val isValueSetAfterOperator: Boolean = false,
     val statusBarSize : Dp = 24.dp,
     val memory : Double = 0.0,
-    val isInverseVisible : Boolean = false
+    val isInverseVisible : Boolean = false,
+    val angleUnitDeg : Boolean = true
 )

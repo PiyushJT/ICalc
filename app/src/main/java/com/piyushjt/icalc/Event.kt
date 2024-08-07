@@ -43,4 +43,5 @@ sealed interface Event {
     object MemoryRecall : Event
 
     object ToggleIsInverseVisible: Event
+    object ToggleAngleUnitDeg: Event
 }

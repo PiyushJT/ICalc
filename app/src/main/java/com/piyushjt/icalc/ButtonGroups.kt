@@ -125,7 +125,7 @@ fun HorizontalButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             // Showing text in buttons as needed
-            ScientificButton(event = event, state = state, text = "Rad", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "Unit", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, state = state, text = "sinh", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, state = state, text = "cosh", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, state = state, text = "tanh", height = buttonHeight, width = buttonWidth)
