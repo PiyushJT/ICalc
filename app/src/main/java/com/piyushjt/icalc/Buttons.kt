@@ -26,8 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.piyushjt.icalc.ui.theme.NumBtnColor
 import com.piyushjt.icalc.ui.theme.Black
+import com.piyushjt.icalc.ui.theme.NumBtnColor
 import com.piyushjt.icalc.ui.theme.OrangeBtnColor
 import com.piyushjt.icalc.ui.theme.SciBtnColor
 import com.piyushjt.icalc.ui.theme.SciBtnColorEnabled
@@ -430,13 +430,17 @@ fun ScientificButton(
     width : Dp
 ) {
 
-    val isButtonEnabled = text == "mr" && state.memory != 0.0
+    val ops = listOf("xʸ", "'", "logᵧ")
+    val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh")
+
+    val isMemoryBtnClicked = (text == "mr" && state.memory != 0.0)
+    val isOpBtnClicked = (text in ops && state.buttonClickedForColor == text)
+
+    val isButtonEnabled = isMemoryBtnClicked || isOpBtnClicked
 
     TextButton(
 
         onClick = {
-
-            val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh")
 
             when(text) {
 
@@ -468,8 +472,6 @@ fun ScientificButton(
 
                "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
 
-                "ln" -> event(Event.SetLog(base = E, value = state.value.toDouble()))
-
                 "Rand" -> event(Event.SetValue(random().toString()))
 
 
@@ -482,6 +484,57 @@ fun ScientificButton(
 
                 "mr" -> event(Event.MemoryRecall)
 
+                // Buttons acting as Operators (x^y, yth root, logᵧ)
+                in ops -> {
+
+                    event(Event.SetDotPressed(false))
+
+                    // If equal button was not pressed recently
+                    if(!state.isEqualPressed) {
+
+                        // If operation button not clicked previously
+                        if (state.buttonClicked == null) {
+                            event(Event.SetPreviousValue(state.value)) // Set previous value
+                            // Set button clicked
+                            event(Event.SetButtonClicked(text))
+                            event(Event.SetButtonClickedForColor(text))
+                            if (state.valueToShow == "0") {
+                                event(Event.ShowAns)
+                            }
+                        }
+
+                        // If operation button was clicked previously
+                        else {
+
+                            // If button color is null
+                            if(state.buttonClickedForColor == null) {
+                                event(Event.ShowAns) // show and
+                                event(Event.ClearPreviousValue) // clear previous value
+                                // Set button clicked
+                                event(Event.SetButtonClicked(text))
+                                event(Event.SetButtonClickedForColor(text))
+                            }
+
+                            // If button color is not null
+                            else {
+                                // Set button clicked
+                                event(Event.SetButtonClicked(text))
+                                event(Event.SetButtonClickedForColor(text))
+                            }
+                        }
+                    }
+
+                    // If equal button was pressed recently
+                    else {
+                        event(Event.SetPreviousValue(state.value)) // Set previous value
+                        // Set button clicked
+                        event(Event.SetButtonClicked(text))
+                        event(Event.SetButtonClickedForColor(text))
+                        // Set equal button pressed to false
+                        event(Event.SetEqualPressed(false))
+                    }
+
+                }
 
             }
 

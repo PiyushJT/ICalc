@@ -284,16 +284,19 @@ class ViewModel : ViewModel() {
 
                         "÷" -> "${preValue / value}"
 
+                        "xʸ" -> "${preValue.pow(value)}"
+
+                        "'" -> "${preValue.pow(1/value)}"
+
+                        "logᵧ" -> "${log(preValue, value)}"
+
                         else -> "Error"
 
                     }
 
-                    _state.update {
-                        it.copy(
-                            isValueSetAfterOperator = false
-                        )
-                    }
+                    event(Event.SetValueSetAfterOperator(false))
                     event(Event.SetValue(ans))
+
                     Log.d("show answer", "value ${state.value.value}\n value ${state.value.previousValue}")
 
                 }
