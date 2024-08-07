@@ -68,6 +68,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
 
+    // For System Bars
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.accompanist.systemuicontroller)
+
+    // For Gamma Function -> used for factorial
+    implementation(libs.commons.math3)
+
 }

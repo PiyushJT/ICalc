@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.apache.commons.math3.special.Gamma
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import kotlin.math.acos
@@ -392,13 +393,25 @@ class ViewModel : ViewModel() {
                 event(Event.SetDotPressed(false))
                 event(Event.SetEqualPressed(true))
 
-                var factorial = 1.0
+                val value = state.value.value.toDouble()
 
-                for (i in 1..state.value.value.toDouble().toInt()){
-                    factorial *= i
+                // Check if the value is an integer
+                val factorial = if (value == value.toInt().toDouble()) {
+
+                    if(value >= 0.0) {
+
+                        (1..value.toInt()).fold(1.0) { acc, i -> acc * i }
+                    }
+                    else {
+                        0.0
+                    }
+
                 }
+                else {
 
-                // TODO : Add functionality for non integers later after learning
+                    Gamma.gamma(value + 1)
+
+                }
 
                 event(Event.SetValue(factorial.toString()))
 
