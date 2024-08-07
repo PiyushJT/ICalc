@@ -430,7 +430,7 @@ fun ScientificButton(
     width : Dp
 ) {
 
-    val ops = listOf("xʸ", "'", "logᵧ")
+    val ops = listOf("xʸ", "'", "logᵧ", "x10ʸ")
     val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh", "sin⁻¹", "cos⁻¹", "tan⁻¹", "sinh⁻¹", "cosh⁻¹", "tanh⁻¹")
 
     val isMemoryBtnClicked = (text == "mr" && state.memory != 0.0)

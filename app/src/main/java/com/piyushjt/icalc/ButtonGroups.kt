@@ -109,7 +109,7 @@ fun HorizontalButtons(
             ScientificButton(event = event, state = state, text = "cos", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, state = state, text = "tan", height = buttonHeight, width = buttonWidth)
             ScientificButton(event = event, state = state, text = "e", height = buttonHeight, width = buttonWidth)
-            ScientificButton(event = event, state = state, text = "EE", height = buttonHeight, width = buttonWidth)
+            ScientificButton(event = event, state = state, text = "x10ʸ", height = buttonHeight, width = buttonWidth)
 
             NumButton(state = state, event = event, text = "1", height = buttonHeight, width = buttonWidth, textSize = 24)
             NumButton(state = state, event = event, text = "2", height = buttonHeight, width = buttonWidth, textSize = 24)

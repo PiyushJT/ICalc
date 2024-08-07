@@ -299,6 +299,8 @@ class ViewModel : ViewModel() {
 
                         "logᵧ" -> "${log(preValue, value)}"
 
+                        "x10ʸ" -> "${preValue * 10.0.pow(value)}"
+
                         else -> "Error"
 
                     }
