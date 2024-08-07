@@ -41,4 +41,6 @@ sealed interface Event {
     data class UpdateMemory(val sign : Int, val value : Double) : Event
     object MemoryClear : Event
     object MemoryRecall : Event
+
+    object ToggleIsInverseVisible: Event
 }

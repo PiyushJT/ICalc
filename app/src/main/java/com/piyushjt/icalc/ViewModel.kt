@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.cosh
 import kotlin.math.log
@@ -427,6 +430,12 @@ class ViewModel : ViewModel() {
 
                     "tanh" -> event(Event.SetValue(tanh(state.value.value.toDouble()).toString()))
 
+                    "sin⁻¹" -> event(Event.SetValue(asin(state.value.value.toDouble()).toString()))
+
+                    "cos⁻¹" -> event(Event.SetValue(acos(state.value.value.toDouble()).toString()))
+
+                    "tan⁻¹" -> event(Event.SetValue(atan(state.value.value.toDouble()).toString()))
+
                 }
 
                 Log.d("Set trig", state.value.value)
@@ -479,6 +488,17 @@ class ViewModel : ViewModel() {
                 event(Event.SetValue(state.value.memory.toString()))
 
                 Log.d("Recall memory", state.value.memory.toString())
+            }
+
+            is Event.ToggleIsInverseVisible -> {
+
+                _state.update {
+                    it.copy(
+                        isInverseVisible = !state.value.isInverseVisible
+                    )
+                }
+
+                Log.d("Set inverse visibility", state.value.isInverseVisible.toString())
             }
 
         }

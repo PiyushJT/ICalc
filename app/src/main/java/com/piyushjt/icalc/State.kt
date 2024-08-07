@@ -14,5 +14,6 @@ data class State(
     val isDotPressed : Boolean = false,
     val isValueSetAfterOperator: Boolean = false,
     val statusBarSize : Dp = 24.dp,
-    val memory : Double = 0.0
+    val memory : Double = 0.0,
+    val isInverseVisible : Boolean = false
 )

@@ -431,18 +431,25 @@ fun ScientificButton(
 ) {
 
     val ops = listOf("xʸ", "'", "logᵧ")
-    val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh")
+    val trigs = listOf("sin", "cos", "tan", "sinh", "cosh", "tanh", "sin⁻¹", "cos⁻¹", "tan⁻¹", "sinh⁻¹", "cosh⁻¹", "tanh⁻¹")
 
     val isMemoryBtnClicked = (text == "mr" && state.memory != 0.0)
     val isOpBtnClicked = (text in ops && state.buttonClickedForColor == text)
+    val isInverseVisible = state.isInverseVisible && text == "f⁻¹"
 
-    val isButtonEnabled = isMemoryBtnClicked || isOpBtnClicked
+    val isButtonEnabled = isMemoryBtnClicked || isOpBtnClicked || isInverseVisible
+
+    var textToShow = text
+
+    if(text in trigs.subList(0,6) && state.isInverseVisible){
+        textToShow = "${text}⁻¹"
+    }
 
     TextButton(
 
         onClick = {
 
-            when(text) {
+            when(textToShow) {
 
                 "¹⁄ₓ" -> event(Event.SetReciprocal)
 
@@ -462,7 +469,7 @@ fun ScientificButton(
 
                 "2ˣ" -> event(Event.SetPower(2.0, state.value.toDouble()))
 
-                in trigs -> event(Event.SetTrig(text))
+                in trigs -> event(Event.SetTrig(textToShow))
 
                 "!" -> event(Event.SetPower(state.value.toDouble(), 1/2.0))
 
@@ -484,6 +491,8 @@ fun ScientificButton(
 
                 "mr" -> event(Event.MemoryRecall)
 
+                "f⁻¹" -> event(Event.ToggleIsInverseVisible)
+
                 // Buttons acting as Operators (x^y, yth root, logᵧ)
                 in ops -> {
 
@@ -496,8 +505,8 @@ fun ScientificButton(
                         if (state.buttonClicked == null) {
                             event(Event.SetPreviousValue(state.value)) // Set previous value
                             // Set button clicked
-                            event(Event.SetButtonClicked(text))
-                            event(Event.SetButtonClickedForColor(text))
+                            event(Event.SetButtonClicked(textToShow))
+                            event(Event.SetButtonClickedForColor(textToShow))
                             if (state.valueToShow == "0") {
                                 event(Event.ShowAns)
                             }
@@ -511,15 +520,15 @@ fun ScientificButton(
                                 event(Event.ShowAns) // show and
                                 event(Event.ClearPreviousValue) // clear previous value
                                 // Set button clicked
-                                event(Event.SetButtonClicked(text))
-                                event(Event.SetButtonClickedForColor(text))
+                                event(Event.SetButtonClicked(textToShow))
+                                event(Event.SetButtonClickedForColor(textToShow))
                             }
 
                             // If button color is not null
                             else {
                                 // Set button clicked
-                                event(Event.SetButtonClicked(text))
-                                event(Event.SetButtonClickedForColor(text))
+                                event(Event.SetButtonClicked(textToShow))
+                                event(Event.SetButtonClickedForColor(textToShow))
                             }
                         }
                     }
@@ -528,8 +537,8 @@ fun ScientificButton(
                     else {
                         event(Event.SetPreviousValue(state.value)) // Set previous value
                         // Set button clicked
-                        event(Event.SetButtonClicked(text))
-                        event(Event.SetButtonClickedForColor(text))
+                        event(Event.SetButtonClicked(textToShow))
+                        event(Event.SetButtonClickedForColor(textToShow))
                         // Set equal button pressed to false
                         event(Event.SetEqualPressed(false))
                     }
@@ -548,15 +557,15 @@ fun ScientificButton(
         colors = ButtonDefaults.buttonColors( containerColor = if (isButtonEnabled) SciBtnColorEnabled else SciBtnColor)
     ) {
 
-        val isRootButton = text in listOf("!", "\"", "'")
+        val isRootButton = textToShow in listOf("!", "\"", "'")
 
         Text(
-            text = text,
+            text = textToShow,
             textAlign = TextAlign.Center,
             color = if (isButtonEnabled) Black else White,
 
             // Changing font if it is a root button
-            fontSize = if (isRootButton) 24.sp else 14.sp,
+            fontSize = if (isRootButton) 24.sp else if (textToShow in trigs) 12.sp else 14.sp,
             fontFamily = if (isRootButton) FontFamily(Font(R.font.roots_logos_as_font)) else FontFamily(Font(R.font.inter_light)),
             fontWeight = if (isRootButton) FontWeight.Light else FontWeight.Bold
         )
