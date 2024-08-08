@@ -63,7 +63,7 @@ fun DotButton(
             else {
 
                 // If dot is not present already
-                if (!state.value.contains(".")) {
+                if (!state.value!!.contains(".")) {
                     event(Event.SetDotPressed(true)) // Set dot pressed to true
 
                     // If operation button was just clicked
@@ -452,6 +452,8 @@ fun ScientificButton(
 
         onClick = {
 
+            val value = state.value?.toDouble()?: 0.0
+
             when(textToShow) {
 
                 in listOf("Rad", "Deg") -> event(Event.ToggleAngleUnitDeg)
@@ -462,31 +464,31 @@ fun ScientificButton(
 
                 "mc" -> event(Event.MemoryClear)
 
-                "m+" -> event(Event.UpdateMemory(1, state.value.toDouble()))
+                "m+" -> event(Event.UpdateMemory(1, value))
 
-                "m-" -> event(Event.UpdateMemory(-1, state.value.toDouble()))
+                "m-" -> event(Event.UpdateMemory(-1, value))
 
                 "mr" -> event(Event.MemoryRecall)
 
 
-                "x²" -> event(Event.SetPower(state.value.toDouble(), 2.0))
+                "x²" -> event(Event.SetPower(value, 2.0))
 
-                "x³" -> event(Event.SetPower(state.value.toDouble(), 3.0))
+                "x³" -> event(Event.SetPower(value, 3.0))
 
-                "eˣ" -> event(Event.SetPower(E, state.value.toDouble()))
+                "eˣ" -> event(Event.SetPower(E, value))
 
-                "2ˣ" -> event(Event.SetPower(2.0, state.value.toDouble()))
+                "2ˣ" -> event(Event.SetPower(2.0, value))
 
-                "10ˣ" -> event(Event.SetPower(10.0, state.value.toDouble()))
+                "10ˣ" -> event(Event.SetPower(10.0, value))
 
 
-                "!" -> event(Event.SetPower(state.value.toDouble(), 1/2.0))
+                "!" -> event(Event.SetPower(value, 1/2.0))
 
-                "\"" -> event(Event.SetPower(state.value.toDouble(), 1/3.0))
+                "\"" -> event(Event.SetPower(value, 1/3.0))
 
-                "ln" -> event(Event.SetLog(base = E, value = state.value.toDouble()))
+                "ln" -> event(Event.SetLog(base = E, value = value))
 
-                "log₁₀" -> event(Event.SetLog(base = 10.0, value = state.value.toDouble()))
+                "log₁₀" -> event(Event.SetLog(base = 10.0, value = value))
 
 
                 "x!" -> event(Event.SetFactorial)
@@ -554,7 +556,6 @@ fun ScientificButton(
                 }
 
             }
-
         },
 
         modifier = Modifier

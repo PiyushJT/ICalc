@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.Dp
 sealed interface Event {
 
     // Modifying values
-    data class SetValue(val value : String) : Event
+    data class SetValue(val value : String?) : Event
     data class AppendValue(val value : String) : Event
     data class SetValueToShow(val valueToShow : String) : Event
     data class SetPreviousValue(val previousValue : String?) : Event

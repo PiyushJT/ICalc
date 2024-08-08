@@ -42,24 +42,24 @@ class ViewModel : ViewModel() {
                         value = event.value
                     )
                 }
-                event(Event.SetValueToShow(state.value.value))
+                event(Event.SetValueToShow(state.value.value?: "Error"))
 
-                Log.d("set value", state.value.value)
+                Log.d("set value", state.value.value?: "Null")
             }
 
             // Append Value
             is Event.AppendValue -> {
                 // Only append if length is less than 9
-                if (state.value.value.length <= 8) {
+                if (state.value.value!!.length <= 8) {
                     _state.update {
                         it.copy(
                             value = "${state.value.value}${event.value}"
                         )
                     }
 
-                    event(Event.SetValueToShow(state.value.value))
+                    event(Event.SetValueToShow(state.value.value?: "Error"))
                 }
-                Log.d("append value", state.value.value)
+                Log.d("append value", state.value.value?: "Null")
             }
 
             // Set Value To Show
@@ -100,7 +100,8 @@ class ViewModel : ViewModel() {
                 }
 
                 // Formating value with commas
-                val formattedValue = formatWithCommas(givenValue, state.value.isDotPressed)
+                val formattedValue = if(event.valueToShow == "Error") "Error"
+                else formatWithCommas(givenValue, state.value.isDotPressed)
 
 
                 // Defining text size based on value of length
@@ -243,7 +244,7 @@ class ViewModel : ViewModel() {
                         textSize = 68
                     )
                 }
-                Log.d("clear value", state.value.value)
+                Log.d("clear value", state.value.value?: "Null")
             }
 
             // Clear Previous value
@@ -259,7 +260,7 @@ class ViewModel : ViewModel() {
             // Clear Last Char (delete on swipe)
             Event.ClearLastChar -> {
 
-                val value = state.value.value
+                val value = state.value.value?: "0"
 
                 // Only clear if possible
                 if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
@@ -285,27 +286,27 @@ class ViewModel : ViewModel() {
                 if (state.value.previousValue != null && state.value.buttonClicked != null){
 
                     val preValue = state.value.previousValue!!.toDouble()
-                    val value = state.value.value.toDouble()
+                    val value = state.value.value?.toDouble()?: 0.0
 
                     val ans = when(state.value.buttonClicked){
 
-                        "×" -> "${preValue * value}"
+                        "×" -> if("${preValue * value}" != "Infinity") "${preValue * value}" else null
 
                         "+" -> "${preValue + value}"
 
                         "-" -> "${preValue - value}"
 
-                        "÷" -> "${preValue / value}"
+                        "÷" -> if(value != 0.0) "${preValue / value}" else null
 
                         "xʸ" -> "${preValue.pow(value)}"
 
-                        "'" -> "${preValue.pow(1/value)}"
+                        "'" -> if(value != 0.0)"${preValue.pow(1/value)}" else null
 
-                        "logᵧ" -> "${log(preValue, value)}"
+                        "logᵧ" -> if(preValue != 0.0) "${log(preValue, value)}" else "1.0"
 
                         "x10ʸ" -> "${preValue * 10.0.pow(value)}"
 
-                        else -> "Error"
+                        else -> null
 
                     }
 
@@ -321,7 +322,7 @@ class ViewModel : ViewModel() {
             is Event.CalculatePercent -> {
 
                 // Defining values
-                val value = state.value.value.toDouble()
+                val value = state.value.value?.toDouble() ?: 0.0
                 val previousValue = state.value.previousValue?.toDouble()
                 val buttonClicked = state.value.buttonClicked
 
@@ -364,7 +365,7 @@ class ViewModel : ViewModel() {
             Event.ChangeSignOfValue -> {
 
                 // Defining value
-                var value = state.value.value.toDouble()
+                var value = state.value.value?.toDouble() ?: 0.0
                 value = 0- value
 
                 var newValue = value.toString()
@@ -379,19 +380,21 @@ class ViewModel : ViewModel() {
 
                 event(Event.SetValue(newValue))
 
-                Log.d("Change sign", state.value.value)
+                Log.d("Change sign", state.value.value?: "Null")
             }
 
             Event.SetReciprocal -> {
 
+                val value = state.value.value?.toDouble()?: 0.0
+
                 event(Event.SetDotPressed(false))
                 event(Event.SetEqualPressed(false))
 
-                val reciprocal = (1 / state.value.value.toDouble()).toString()
+                val reciprocal = if(value != 0.0) (1 / value).toString() else null
 
                 event(Event.SetValue(reciprocal))
 
-                Log.d("Set reciprocal", state.value.value)
+                Log.d("Set reciprocal", state.value.value?: "Null")
             }
 
             Event.SetFactorial -> {
@@ -399,12 +402,12 @@ class ViewModel : ViewModel() {
                 event(Event.SetDotPressed(false))
                 event(Event.SetEqualPressed(true))
 
-                val value = state.value.value.toDouble()
+                val value = state.value.value?.toDouble() ?: 0.0
 
                 // Check if the value is an integer
                 val factorial = if (value == value.toInt().toDouble()) {
 
-                    if(value >= 0.0) {
+                    if(value in 0.0..170.0) {
 
                         (1..value.toInt()).fold(1.0) { acc, i -> acc * i }
                     }
@@ -421,7 +424,7 @@ class ViewModel : ViewModel() {
 
                 event(Event.SetValue(factorial.toString()))
 
-                Log.d("Set factorial", state.value.value)
+                Log.d("Set factorial", state.value.value?: "Null")
             }
 
             is Event.SetPower -> {
@@ -432,7 +435,7 @@ class ViewModel : ViewModel() {
 
                 event(Event.SetValue(power.toString()))
 
-                Log.d("Set power", state.value.value)
+                Log.d("Set power", state.value.value?: "Null")
 
             }
 
@@ -440,84 +443,98 @@ class ViewModel : ViewModel() {
                 event(Event.SetDotPressed(false))
                 event(Event.SetEqualPressed(true))
 
+
+                val value = state.value.value?.toDouble()?: 0.0
+
                 when(event.trig){
 
                     "sin" -> {
                         if(state.value.angleUnitDeg){
-                            event(Event.SetValue(sin(toRadians(state.value.value.toDouble())).toString()))
+                            event(Event.SetValue(sin(toRadians(value)).toString()))
                         } else {
-                            event(Event.SetValue(sin(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(sin(value).toString()))
                         }
                     }
 
                     "cos" -> {
                         if(state.value.angleUnitDeg){
-                            event(Event.SetValue(cos(toRadians(state.value.value.toDouble())).toString()))
+                            event(Event.SetValue(cos(toRadians(value)).toString()))
                         } else {
-                            event(Event.SetValue(cos(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(cos(value).toString()))
                         }
                     }
 
                     "tan" -> {
                         if(state.value.angleUnitDeg){
-                            event(Event.SetValue(tan(toRadians(state.value.value.toDouble())).toString()))
+                            event(Event.SetValue(tan(toRadians(value)).toString()))
                         } else {
-                            event(Event.SetValue(tan(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(tan(value).toString()))
                         }
                     }
 
                     "sin⁻¹" -> {
-                        if(state.value.angleUnitDeg){
-                            event(Event.SetValue(toDegrees(asin(state.value.value.toDouble())).toString()))
+
+                        if(value >=-1 && value <= 1) {
+                            if (state.value.angleUnitDeg) {
+                                event(Event.SetValue(toDegrees(asin(value)).toString()))
+                            } else {
+                                event(Event.SetValue(asin(value).toString()))
+                            }
                         } else {
-                            event(Event.SetValue(asin(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(null))
                         }
                     }
 
                     "cos⁻¹" -> {
-                        if(state.value.angleUnitDeg){
-                            event(Event.SetValue(toDegrees(acos(state.value.value.toDouble())).toString()))
+
+                        if(value >=-1 && value <= 1) {
+                            if(state.value.angleUnitDeg){
+                                event(Event.SetValue(toDegrees(acos(value)).toString()))
+                            } else {
+                                event(Event.SetValue(acos(value).toString()))
+                            }
                         } else {
-                            event(Event.SetValue(acos(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(null))
                         }
                     }
 
                     "tan⁻¹" -> {
                         if(state.value.angleUnitDeg){
-                            event(Event.SetValue(toDegrees(atan(state.value.value.toDouble())).toString()))
+                            event(Event.SetValue(toDegrees(atan(value)).toString()))
                         } else {
-                            event(Event.SetValue(atan(state.value.value.toDouble()).toString()))
+                            event(Event.SetValue(atan(value).toString()))
                         }
                     }
 
-                    "sinh" -> event(Event.SetValue(sinh(state.value.value.toDouble()).toString()))
+                    "sinh" -> event(Event.SetValue(sinh(value).toString()))
 
-                    "cosh" -> event(Event.SetValue(cosh(state.value.value.toDouble()).toString()))
+                    "cosh" -> event(Event.SetValue(cosh(value).toString()))
 
-                    "tanh" -> event(Event.SetValue(tanh(state.value.value.toDouble()).toString()))
+                    "tanh" -> event(Event.SetValue(tanh(value).toString()))
 
 
-                    "sinh⁻¹" -> event(Event.SetValue(asinh(state.value.value.toDouble()).toString()))
+                    "sinh⁻¹" -> event(Event.SetValue(asinh(value).toString()))
 
-                    "cosh⁻¹" -> event(Event.SetValue(acosh(state.value.value.toDouble()).toString()))
+                    "cosh⁻¹" -> event(Event.SetValue(acosh(value).toString()))
 
-                    "tanh⁻¹" -> event(Event.SetValue(atanh(state.value.value.toDouble()).toString()))
+                    "tanh⁻¹" -> event(Event.SetValue(atanh(value).toString()))
 
 
                 }
 
-                Log.d("Set trig", state.value.value)
+                Log.d("Set trig", state.value.value?: "Null")
             }
 
             is Event.SetLog -> {
                 event(Event.SetDotPressed(false))
                 event(Event.SetEqualPressed(true))
 
-                val logAns = log(event.value, event.base)
+
+                val logAns = if(event.value != 0.0) log(event.value, event.base) else 1.0
 
                 event(Event.SetValue(logAns.toString()))
 
-                Log.d("Set log", state.value.value)
+                Log.d("Set log", state.value.value?: "Null")
             }
 
             is Event.UpdateMemory -> {
@@ -632,4 +649,7 @@ private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
         if (fractionalPart.isNotEmpty() || isDotPressed) "$formatted.$fractionalPart" else formatted
     }
 
+}
+
+fun main(){
 }

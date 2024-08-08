@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class State(
-    val value : String = "0",
+    val value : String? = "0",
     val valueToShow : String = "0",
     val textSize : Int = 68,
     val previousValue: String? = null,
