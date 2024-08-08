@@ -454,38 +454,12 @@ fun ScientificButton(
 
             when(textToShow) {
 
-                "¹⁄ₓ" -> event(Event.SetReciprocal)
+                in listOf("Rad", "Deg") -> event(Event.ToggleAngleUnitDeg)
 
-                "x!" -> event(Event.SetFactorial)
-
-                "π" -> event(Event.SetValue(PI.toString()))
-
-                "e" -> event(Event.SetValue(E.toString()))
-
-                "x²" -> event(Event.SetPower(state.value.toDouble(), 2.0))
-
-                "x³" -> event(Event.SetPower(state.value.toDouble(), 3.0))
-
-                "eˣ" -> event(Event.SetPower(E, state.value.toDouble()))
-
-                "10ˣ" -> event(Event.SetPower(10.0, state.value.toDouble()))
-
-                "2ˣ" -> event(Event.SetPower(2.0, state.value.toDouble()))
-
-                in trigs -> event(Event.SetTrig(textToShow))
-
-                "!" -> event(Event.SetPower(state.value.toDouble(), 1/2.0))
-
-                "\"" -> event(Event.SetPower(state.value.toDouble(), 1/3.0))
-
-                "log₁₀" -> event(Event.SetLog(base = 10.0, value = state.value.toDouble()))
-
-                "log₂" -> event(Event.SetLog(base = 2.0, value = state.value.toDouble()))
-
-                "Rand" -> event(Event.SetValue(random().toString()))
-
+                "f⁻¹" -> event(Event.ToggleIsInverseVisible)
 
                 // Memory Keys
+
                 "mc" -> event(Event.MemoryClear)
 
                 "m+" -> event(Event.UpdateMemory(1, state.value.toDouble()))
@@ -494,7 +468,38 @@ fun ScientificButton(
 
                 "mr" -> event(Event.MemoryRecall)
 
-                "f⁻¹" -> event(Event.ToggleIsInverseVisible)
+
+                "x²" -> event(Event.SetPower(state.value.toDouble(), 2.0))
+
+                "x³" -> event(Event.SetPower(state.value.toDouble(), 3.0))
+
+                "eˣ" -> event(Event.SetPower(E, state.value.toDouble()))
+
+                "2ˣ" -> event(Event.SetPower(2.0, state.value.toDouble()))
+
+                "10ˣ" -> event(Event.SetPower(10.0, state.value.toDouble()))
+
+
+                "!" -> event(Event.SetPower(state.value.toDouble(), 1/2.0))
+
+                "\"" -> event(Event.SetPower(state.value.toDouble(), 1/3.0))
+
+                "ln" -> event(Event.SetLog(base = E, value = state.value.toDouble()))
+
+                "log₁₀" -> event(Event.SetLog(base = 10.0, value = state.value.toDouble()))
+
+
+                "x!" -> event(Event.SetFactorial)
+
+                in trigs -> event(Event.SetTrig(textToShow))
+
+                "e" -> event(Event.SetValue(E.toString()))
+
+                "π" -> event(Event.SetValue(PI.toString()))
+
+                "¹⁄ₓ" -> event(Event.SetReciprocal)
+
+                "Rand" -> event(Event.SetValue(random().toString()))
 
                 // Buttons acting as Operators (x^y, yth root, logᵧ)
                 in ops -> {
@@ -547,8 +552,6 @@ fun ScientificButton(
                     }
 
                 }
-
-                in listOf("Rad", "Deg") -> event(Event.ToggleAngleUnitDeg)
 
             }
 
