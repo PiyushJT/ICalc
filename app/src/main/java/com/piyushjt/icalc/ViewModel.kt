@@ -264,7 +264,11 @@ class ViewModel : ViewModel() {
                 // Only clear if possible
                 if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
 
-                    val newValue = if (value.length < 2) "0" else value.substring(0, value.length - 1)
+                    val newValue =
+                        if (value.length == 2 && value.toDouble() < 0)
+                            0.toString()
+                        else if (value.length < 2) "0"
+                        else value.substring(0, value.length - 1)
 
                     event(Event.SetValue(newValue))
 
