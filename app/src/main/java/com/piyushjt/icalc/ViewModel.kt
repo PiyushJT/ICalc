@@ -1,5 +1,6 @@
 package com.piyushjt.icalc
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -203,17 +204,6 @@ class ViewModel : ViewModel() {
                         isValueSetAfterOperator = event.isSet
                     )
                 }
-            }
-
-
-            // Set Status bar size
-            is Event.SetStatusBarSize -> {
-                _state.update {
-                    it.copy(
-                        statusBarSize = event.size
-                    )
-                }
-                Log.d("Status bar size", state.value.statusBarSize.toString())
             }
 
             // Clear All

@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.piyushjt.icalc.ui.theme.Black
@@ -21,6 +21,7 @@ import com.piyushjt.icalc.ui.theme.Black
 // Horizontal Screen
 @Composable
 fun HorizontalScreen(
+    statusBarSize : Dp,
     state: State,
     event: (Event) -> Unit
 ) {
@@ -36,7 +37,7 @@ fun HorizontalScreen(
             .fillMaxSize()
             .background(Black)
             .padding(
-                start = state.statusBarSize,
+                start = statusBarSize,
                 bottom = WindowInsets.navigationBars
                     .asPaddingValues()
                     .calculateBottomPadding(),
@@ -73,7 +74,6 @@ fun VerticalScreen(
     event: (Event) -> Unit
 ) {
 
-    event(Event.SetStatusBarSize(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
 
     Column(
         modifier = Modifier

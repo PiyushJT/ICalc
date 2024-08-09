@@ -1,8 +1,5 @@
 package com.piyushjt.icalc
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-
 data class State(
     val value : String? = "0",
     val valueToShow : String = "0",
@@ -13,7 +10,6 @@ data class State(
     val isEqualPressed : Boolean = false,
     val isDotPressed : Boolean = false,
     val isValueSetAfterOperator: Boolean = false,
-    val statusBarSize : Dp = 24.dp,
     val memory : Double = 0.0,
     val isInverseVisible : Boolean = false,
     val angleUnitDeg : Boolean = true

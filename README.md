@@ -1,16 +1,20 @@
 # I Calc - IOS UI Calculator
 
-This is a Calculator for android smartphones which mimics IOS calculator's UI
+This is a Scientific Calculator for android smartphones which mimics IOS calculator's UI
 
 
 ## Features
 
-- Free and Open Source
 - Swipe to Delete
 - Scientific Calculations
 - Scientific Notations
 - Cool UI
-
+- All Scientific Functions
+    - Trigonometric
+    - Logarithm
+    - Exponential
+    - Classic Memory Functions
+    - And many more
 
 ## Screenshots
 
@@ -19,7 +23,7 @@ This is a Calculator for android smartphones which mimics IOS calculator's UI
 
 # Download
 
-[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_22.apk)
+[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_34.apk)
 
 
 ## Authors

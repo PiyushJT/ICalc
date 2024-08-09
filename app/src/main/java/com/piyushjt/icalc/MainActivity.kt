@@ -1,6 +1,7 @@
 package com.piyushjt.icalc
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,9 +13,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,8 +79,20 @@ class MainActivity : ComponentActivity() {
 
             WindowCompat.setDecorFitsSystemWindows(window, false)
 
+            val sharedPref = getSharedPreferences("statusBarSize", Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+
 
             if(aspectRatio <= 0.8) {
+
+                val calculatedStatusBarSize = WindowInsets.systemBars.asPaddingValues().calculateTopPadding().value
+
+                if(calculatedStatusBarSize > 24){
+                    editor.apply {
+                        putInt("statusBarSize",calculatedStatusBarSize.toInt())
+                        apply()
+                    }
+                }
 
                 // Vertical Screen
                 VerticalScreen(
@@ -92,6 +108,7 @@ class MainActivity : ComponentActivity() {
 
                 // Horizontal Screen
                 HorizontalScreen(
+                    statusBarSize = sharedPref.getInt("statusBarSize", 24).dp,
                     state = state,
                     event = viewModel::event
                 )
