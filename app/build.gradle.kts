@@ -75,4 +75,7 @@ dependencies {
     // For Gamma Function -> used for factorial
     implementation(libs.commons.math3)
 
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
 }

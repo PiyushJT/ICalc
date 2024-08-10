@@ -68,6 +68,8 @@ class MainActivity : ComponentActivity() {
         controller.isAppearanceLightStatusBars = false
         Black.toArgb().also { window.navigationBarColor = it }
 
+        // Removing action bar
+        actionBar?.hide()
 
         setContent {
 
