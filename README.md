@@ -23,7 +23,7 @@ This is a Scientific Calculator for android smartphones which mimics IOS calcula
 
 # Download
 
-[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_34.apk)
+[<img src="https://raw.githubusercontent.com/PiyushJT/ICalc/main/for_readme/download_btn.png" alt='Download APK' height="80">](https://piyushjt.github.io/My-Apps/icalc_apks/ICalc_36.apk)
 
 
 ## Authors

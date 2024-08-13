@@ -1,6 +1,5 @@
 package com.piyushjt.icalc
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -255,11 +254,16 @@ class ViewModel : ViewModel() {
                 // Only clear if possible
                 if((!state.value.isEqualPressed) && state.value.buttonClickedForColor == null){
 
-                    val newValue =
+                    var newValue =
                         if (value.length == 2 && value.toDouble() < 0)
                             0.toString()
                         else if (value.length < 2) "0"
                         else value.substring(0, value.length - 1)
+
+                    if (value.endsWith('.') && state.value.isDotPressed){
+                        newValue = value.removeSuffix(".")
+                        event(Event.SetDotPressed(false))
+                    }
 
                     event(Event.SetValue(newValue))
 
@@ -639,7 +643,4 @@ private fun formatWithCommas(value: String, isDotPressed: Boolean): String {
         if (fractionalPart.isNotEmpty() || isDotPressed) "$formatted.$fractionalPart" else formatted
     }
 
-}
-
-fun main(){
 }
